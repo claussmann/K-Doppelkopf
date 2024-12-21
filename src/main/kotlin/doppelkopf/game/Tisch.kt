@@ -4,15 +4,15 @@ import kotlin.random.Random
 
 class Tisch {
     val stapel: ArrayList<Karte> = arrayListOf(
-        Karte.KARO_9, Karte.KARO_10, Karte.KARO_B, Karte.KARO_D, Karte.KARO_K, Karte.KARO_A,
-        Karte.HERZ_9, Karte.HERZ_10, Karte.HERZ_B, Karte.HERZ_D, Karte.HERZ_K, Karte.HERZ_A,
-        Karte.PIK_9, Karte.PIK_10, Karte.PIK_B, Karte.PIK_D, Karte.PIK_K, Karte.PIK_A,
-        Karte.KREUZ_9, Karte.KREUZ_10, Karte.KREUZ_B, Karte.KREUZ_D, Karte.KREUZ_K, Karte.KREUZ_A,
+        Karte.KA_9, Karte.KA_10, Karte.KA_B, Karte.KA_D, Karte.KA_K, Karte.KA_A,
+        Karte.HE_9, Karte.HE_10, Karte.HE_B, Karte.HE_D, Karte.HE_K, Karte.HE_A,
+        Karte.PI_9, Karte.PI_10, Karte.PI_B, Karte.PI_D, Karte.PI_K, Karte.PI_A,
+        Karte.KR_9, Karte.KR_10, Karte.KR_B, Karte.KR_D, Karte.KR_K, Karte.KR_A,
         // Alle Karten doppelt
-        Karte.KARO_9, Karte.KARO_10, Karte.KARO_B, Karte.KARO_D, Karte.KARO_K, Karte.KARO_A,
-        Karte.HERZ_9, Karte.HERZ_10, Karte.HERZ_B, Karte.HERZ_D, Karte.HERZ_K, Karte.HERZ_A,
-        Karte.PIK_9, Karte.PIK_10, Karte.PIK_B, Karte.PIK_D, Karte.PIK_K, Karte.PIK_A,
-        Karte.KREUZ_9, Karte.KREUZ_10, Karte.KREUZ_B, Karte.KREUZ_D, Karte.KREUZ_K, Karte.KREUZ_A
+        Karte.KA_9, Karte.KA_10, Karte.KA_B, Karte.KA_D, Karte.KA_K, Karte.KA_A,
+        Karte.HE_9, Karte.HE_10, Karte.HE_B, Karte.HE_D, Karte.HE_K, Karte.HE_A,
+        Karte.PI_9, Karte.PI_10, Karte.PI_B, Karte.PI_D, Karte.PI_K, Karte.PI_A,
+        Karte.KR_9, Karte.KR_10, Karte.KR_B, Karte.KR_D, Karte.KR_K, Karte.KR_A
     )
 
     init {
