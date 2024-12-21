@@ -12,6 +12,19 @@ class Runde (var startPos: Position = Position.OBEN, val modus: Spielmodus){
     private var amZug: Position = startPos
     private var stichNummer: Int = 1
 
+    /**
+     * Prüft, ob der Stich vollständig ist (4 Karten liegen).
+     */
+    fun stichKomplett(): Boolean {
+        return links != null && oben != null && rechts != null && unten != null
+    }
+
+    /**
+     * Prüft, ob die Runde vollständig ist (alle Karten gelegt, bzw. 12 Stiche).
+     */
+    fun rundeKomplett(): Boolean {
+        return stichKomplett() && stichNummer >= 12
+    }
 
     /**
      * Zählt die Punkte eines Spielers aus (hier wird noch nicht nach Teams gezählt!).
@@ -30,6 +43,7 @@ class Runde (var startPos: Position = Position.OBEN, val modus: Spielmodus){
      * Diese Funktion prüft auch, ob der Spieler bereits gelegt hat, oder ob er überhaupt dran ist.
      */
     fun karteGelegt(k: Karte, pos: Position) {
+        if (rundeKomplett()) throw IllegalerZugException("Diese Runde ist bereits abgeschlossen.")
         if (pos != amZug) throw IllegalerZugException("Spieler ist nicht an der Reihe")
         when (pos) {
             Position.LINKS -> if (links == null) links = k else throw IllegalerZugException("Spieler hat schon gelegt")
@@ -44,8 +58,7 @@ class Runde (var startPos: Position = Position.OBEN, val modus: Spielmodus){
      * Ermittelt den Gewinner des aktuellen Stichs und bereitet alles für den nächsten Stich vor.
      */
     fun stichGewinnerErmitteln(): Position {
-        if (links == null || oben == null || rechts == null || unten == null)
-            throw IllegalerZugException("Noch nicht alle haben gelegt")
+        if (!stichKomplett()) throw IllegalerZugException("Noch nicht alle haben gelegt")
         var bestPos = startPos
         var bestCard = gelegtVon(bestPos)!!
         val aufspiel = bestCard
