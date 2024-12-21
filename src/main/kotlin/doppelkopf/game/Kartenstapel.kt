@@ -32,7 +32,7 @@ class Kartenstapel {
         val ret = ArrayList<Karte>()
         if (currentCopy.size < anzahl) throw IllegalArgumentException("Stapel enthält nicht genug Karten.")
         for (i in 1..anzahl) {
-            ret.add(currentCopy.removeAt(Random.nextInt(0, stapel.size)))
+            ret.add(currentCopy.removeAt(Random.nextInt(0, currentCopy.size)))
         }
         return ret
     }
