@@ -1,10 +1,35 @@
 package doppelkopf.game
 
 enum class Karte {
-    KA_9, KA_10, KA_B, KA_D, KA_K, KA_A,
-    HE_9, HE_10, HE_B, HE_D, HE_K, HE_A,
-    PI_9, PI_10, PI_B, PI_D, PI_K, PI_A,
-    KR_9, KR_10, KR_B, KR_D, KR_K, KR_A;
+    KA_9 {override fun punkte() = 0},
+    KA_10 {override fun punkte() = 10},
+    KA_B {override fun punkte() = 2},
+    KA_D {override fun punkte() = 3},
+    KA_K {override fun punkte() = 4},
+    KA_A {override fun punkte() = 11},
+
+    HE_9 {override fun punkte() = 0},
+    HE_10 {override fun punkte() = 10},
+    HE_B {override fun punkte() = 2},
+    HE_D {override fun punkte() = 3},
+    HE_K {override fun punkte() = 4},
+    HE_A {override fun punkte() = 11},
+
+    PI_9 {override fun punkte() = 0},
+    PI_10 {override fun punkte() = 10},
+    PI_B {override fun punkte() = 2},
+    PI_D {override fun punkte() = 3},
+    PI_K {override fun punkte() = 4},
+    PI_A {override fun punkte() = 11},
+
+    KR_9 {override fun punkte() = 0},
+    KR_10 {override fun punkte() = 10},
+    KR_B {override fun punkte() = 2},
+    KR_D {override fun punkte() = 3},
+    KR_K {override fun punkte() = 4},
+    KR_A {override fun punkte() = 11};
+
+    abstract fun punkte(): Int
 
     fun sticht(other: Karte, letzteRunde: Boolean, schweinInRunde: Boolean, aufspiel: Karte, mod: Spielmodus): Boolean {
         return when (mod) {
