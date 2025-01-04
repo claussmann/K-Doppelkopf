@@ -19,4 +19,4 @@ jobs:
       run: sudo apt update && sudo apt install openjdk-17-jdk gradle
 
     - name: Test with Gradle Wrapper
-      run: ./gradlew test
+      run: gradle test
