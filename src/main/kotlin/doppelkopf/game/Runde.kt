@@ -13,6 +13,20 @@ class Runde (var startPos: Position = Position.OBEN, val modus: Spielmodus){
     private var stichNummer: Int = 1
 
     /**
+     * Gibt zurück, welche Position dran ist.
+     */
+    fun werIstDran(): Position {
+        return amZug
+    }
+
+    /**
+     * Gibt zurück, welcher Spielmodus gespielt wird.
+     */
+    fun welcherSpielmodus(): Spielmodus {
+        return modus
+    }
+
+    /**
      * Prüft, ob der Stich vollständig ist (4 Karten liegen).
      */
     fun stichKomplett(): Boolean {
@@ -23,7 +37,7 @@ class Runde (var startPos: Position = Position.OBEN, val modus: Spielmodus){
      * Prüft, ob die Runde vollständig ist (alle Karten gelegt, bzw. 12 Stiche).
      */
     fun rundeKomplett(): Boolean {
-        return stichKomplett() && stichNummer >= 12
+        return stichNummer > 12
     }
 
     /**

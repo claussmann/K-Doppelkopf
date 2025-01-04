@@ -14,7 +14,7 @@ class Spieler(val name: String, val pos: Position) {
         if (hand.contains(k)) hand.remove(k) else throw IllegalerZugException("Karte $k nicht in Hand.")
     }
 
-    fun neueHand(hand: ArrayList<Karte>) {
-        if (this.hand.isNotEmpty()) throw IllegalerZugException("Hand ist noch nicht leer.") else this.hand = hand
+    fun neueHand(hand: ArrayList<Karte>, force: Boolean = false) {
+        if (this.hand.isNotEmpty() && !force) throw IllegalerZugException("Hand ist nicht leer.") else this.hand = hand
     }
 }

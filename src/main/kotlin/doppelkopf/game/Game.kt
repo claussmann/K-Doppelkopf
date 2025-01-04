@@ -1,5 +1,7 @@
 package doppelkopf.game
 
+import kotlin.math.absoluteValue
+
 class Game(val spieler: Array<Spieler>) {
     val karten = Kartenstapel()
     var currentRunde: Runde? = null
@@ -7,14 +9,15 @@ class Game(val spieler: Array<Spieler>) {
     var obenVorbehalt: Spielmodus? = null
     var rechtsVorbehalt: Spielmodus? = null
     var untenVorbehalt: Spielmodus? = null
-    val geber: Position = Position.OBEN
+    val geber: Position = Position.LINKS
+    val rundenauswertungen = ArrayList<Rundenauswertung>()
 
     init {
         if (spieler.size != 4) throw IllegalArgumentException("Es werden genau 4 Spieler erwartet.")
         neuGeben()
     }
 
-    fun neuGeben() {
+    private fun neuGeben() {
         for (s in spieler) {
             s.neueHand(karten.zieheKarten())
             s.partei = Partei.UNBEKANNT
@@ -32,7 +35,10 @@ class Game(val spieler: Array<Spieler>) {
             r.karteGelegt(karte, pos)
             s.legeKarte(karte)
         }
-        if (r.stichKomplett()) r.stichGewinnerErmitteln()
+        if (r.stichKomplett()) {
+            r.stichGewinnerErmitteln()
+            ermittleParteien() // Bei Hochzeit ergeben sich die Parteien möglicherweise erst jetzt.
+        }
         if (r.rundeKomplett()) rundeAuswerten()
     }
 
@@ -66,6 +72,40 @@ class Game(val spieler: Array<Spieler>) {
             }
             val starter = if (bestVorbehalt.isPflichtsolo()) bestPos else geber.next()
             currentRunde = Runde(starter, bestVorbehalt)
+            ermittleParteien()
+        }
+    }
+
+    fun werIstDran(): Position {
+        return currentRunde?.werIstDran() ?: geber.next()
+    }
+
+    fun rundenauswertungen(): ArrayList<Rundenauswertung> {
+        return rundenauswertungen
+    }
+
+    private fun ermittleParteien() {
+        for (s in spieler) {
+            if (s.partei != Partei.UNBEKANNT) return
+        }
+        when (currentRunde?.welcherSpielmodus()) {
+            Spielmodus.NORMAL -> {
+                for (s in spieler) {
+                    if (s.hasKarte(Karte.KR_D)) s.partei = Partei.RE else s.partei = Partei.KONTRA
+                }
+            }
+            Spielmodus.HOCHZEIT -> TODO()
+            Spielmodus.ARMUT -> TODO()
+            Spielmodus.SOLO_REINES_KARO, Spielmodus.SOLO_REINES_HERZ,
+            Spielmodus.SOLO_REINES_PIK, Spielmodus.SOLO_REINES_KREUZ,
+            Spielmodus.SOLO_KARO, Spielmodus.SOLO_HERZ,
+            Spielmodus.SOLO_PIK, Spielmodus.SOLO_KREUZ,
+            Spielmodus.SOLO_DAME, Spielmodus.SOLO_BUBE,
+            Spielmodus.SOLO -> {
+                TODO()
+                // Bei Solo muss man sich direkt nach dem vorbehalt ansagen merken, wer das solo spielt.
+            }
+            null -> TODO()
         }
     }
 
@@ -78,16 +118,30 @@ class Game(val spieler: Array<Spieler>) {
         else if (punkteRe < 30) -4
         else if (punkteRe < 60) -3
         else if (punkteRe < 90) -2
-        else if (punkteRe < 120) -1
+        else if (punkteRe < 121) -1
         else if (punkteRe < 150) 1
         else if (punkteRe < 180) 2
         else if (punkteRe < 210) 3
         else if (punkteRe < 240) 4
         else 5
-        // TODO: Sonderpunkte, Absagen
+        // Sonderpunkte, Absagen
+        var gegenDieAlten = false
+        if (currentRunde?.welcherSpielmodus() == Spielmodus.NORMAL && punkteRe < 121) {
+            rundenpunkte -= 1
+            gegenDieAlten = true
+        } // Gegen d. alten
+        // TODO
         for (s in spieler) {
             if (s.partei == Partei.RE) s.punkte += rundenpunkte else s.punkte -= rundenpunkte
         }
+        rundenauswertungen.add(
+            Rundenauswertung(
+                rundenpunkte,
+                punkteRe,
+                currentRunde!!.welcherSpielmodus(),
+                gegenDieAlten
+                )
+        )
         currentRunde = null
     }
 
