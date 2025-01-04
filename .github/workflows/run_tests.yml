@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 17
-      run: sudo apt update && sudo apt install openjdk-17-jdk
+      run: sudo apt update && sudo apt install openjdk-17-jdk gradle
 
     - name: Test with Gradle Wrapper
       run: ./gradlew test
