@@ -30,6 +30,9 @@ replay_pid*
 .gradle
 gradle
 
+# Maven
+target/*
+
 # Intellij
 .idea
 build
