@@ -2,7 +2,7 @@ package doppelkopf.game
 
 import kotlin.test.*
 
-class GameTest {
+class DoppelkopfSpielTest {
 
     @Test
     fun testCompleteGame() {
@@ -11,7 +11,7 @@ class GameTest {
         val jan = Spieler("Jan", Position.RECHTS)
         val fred = Spieler("Fred", Position.UNTEN)
         val ann = Spieler("Ann", Position.LINKS)
-        val g = Game(arrayOf(peter, jan, fred, ann))
+        val g = DoppelkopfSpiel(arrayOf(peter, jan, fred, ann))
 
         // Spielern feste Karten geben
         peter.neueHand(arrayListOf(

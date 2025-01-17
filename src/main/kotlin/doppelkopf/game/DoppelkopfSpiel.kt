@@ -1,8 +1,6 @@
 package doppelkopf.game
 
-import kotlin.math.absoluteValue
-
-class Game(val spieler: Array<Spieler>) {
+class DoppelkopfSpiel(val spieler: Array<Spieler>) {
     val karten = Kartenstapel()
     var currentRunde: Runde? = null
     var linksVorbehalt: Spielmodus? = null
