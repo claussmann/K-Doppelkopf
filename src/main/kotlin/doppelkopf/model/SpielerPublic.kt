@@ -1,4 +1,9 @@
 package doppelkopf.model
 
-class SpielerPublic {
+import doppelkopf.game.Spieler
+
+class SpielerPublic (spieler: Spieler){
+    val name = spieler.name
+    val position = spieler.pos
+    val punkte = spieler.punkte
 }
