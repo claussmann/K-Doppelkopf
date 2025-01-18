@@ -5,6 +5,22 @@ import kotlin.test.*
 class DoppelkopfSpielTest {
 
     @Test
+    fun testIllegaleSpieler() {
+        val peter = Spieler("Peter", Position.OBEN)
+        val jan = Spieler("Jan", Position.RECHTS)
+        val fred = Spieler("Fred", Position.UNTEN)
+        val ann = Spieler("Ann", Position.LINKS)
+        val berta = Spieler("Ann", Position.LINKS)
+
+        // Zu wenige
+        assertFailsWith(IllegalArgumentException::class) { DoppelkopfSpiel(arrayOf(peter, jan, fred)) }
+        // Gleiche position
+        assertFailsWith(IllegalArgumentException::class) { DoppelkopfSpiel(arrayOf(peter, jan, ann, berta)) }
+        // Zu viele
+        assertFailsWith(IllegalArgumentException::class) { DoppelkopfSpiel(arrayOf(peter, jan, fred, ann, berta)) }
+    }
+
+    @Test
     fun testCompleteGame() {
         // Spieler hinzufügen
         val peter = Spieler("Peter", Position.OBEN)

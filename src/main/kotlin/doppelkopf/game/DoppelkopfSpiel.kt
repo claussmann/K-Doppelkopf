@@ -12,6 +12,10 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
 
     init {
         if (spieler.size != 4) throw IllegalArgumentException("Es werden genau 4 Spieler erwartet.")
+        if (spieler.filter { it.pos == Position.OBEN }.size != 1) throw IllegalArgumentException("Jede Position muss belegt sein.")
+        if (spieler.filter { it.pos == Position.UNTEN }.size != 1) throw IllegalArgumentException("Jede Position muss belegt sein.")
+        if (spieler.filter { it.pos == Position.LINKS }.size != 1) throw IllegalArgumentException("Jede Position muss belegt sein.")
+        if (spieler.filter { it.pos == Position.RECHTS }.size != 1) throw IllegalArgumentException("Jede Position muss belegt sein.")
         neuGeben()
     }
 
@@ -63,7 +67,7 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
             for (i in 1..3) {
                 currentPos = currentPos.next()
                 currentVorbehalt = vorbehaltVon(currentPos)!!
-                if (currentVorbehalt.vorrangVor(bestVorbehalt)){
+                if (currentVorbehalt.vorrangVor(bestVorbehalt)) {
                     bestPos = currentPos
                     bestVorbehalt = currentVorbehalt
                 }
@@ -92,6 +96,7 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
                     if (s.hasKarte(Karte.KR_D)) s.partei = Partei.RE else s.partei = Partei.KONTRA
                 }
             }
+
             Spielmodus.HOCHZEIT -> TODO()
             Spielmodus.ARMUT -> TODO()
             Spielmodus.SOLO_REINES_KARO, Spielmodus.SOLO_REINES_HERZ,
@@ -103,6 +108,7 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
                 TODO()
                 // Bei Solo muss man sich direkt nach dem vorbehalt ansagen merken, wer das solo spielt.
             }
+
             null -> TODO()
         }
     }
@@ -138,7 +144,7 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
                 punkteRe,
                 currentRunde!!.welcherSpielmodus(),
                 gegenDieAlten
-                )
+            )
         )
         currentRunde = null
     }
