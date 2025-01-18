@@ -68,7 +68,6 @@ async function refresh() {
 
 function updateUI() {
     document.getElementById("display_player_name").textContent=SELF.name;
-    document.getElementById("display_player_token").textContent=SELF.sessionToken;
     if (LEFT != null) {
         document.getElementById("player_left").textContent = LEFT.name;
         document.getElementById("points_left").textContent = LEFT.punkte;
