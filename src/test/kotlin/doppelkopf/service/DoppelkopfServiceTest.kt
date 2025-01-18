@@ -81,7 +81,8 @@ class DoppelkopfServiceTest {
 
         currentTurnPlayer = service.getCurrentTurnPlayer()
         privateCurrentTurn = listOf(s1, s2, s3, s4).first { it.position == currentTurnPlayer.position }
-        service.karteLegen(privateCurrentTurn.sessionToken, privateCurrentTurn.hand.first())
-        assertEquals(11, privateCurrentTurn.hand.size)
+        val playerWithCards = service.getPrivateSpielerInfo(privateCurrentTurn.sessionToken)
+        service.karteLegen(playerWithCards.sessionToken, playerWithCards.hand.first())
+        assertEquals(11, service.getPrivateSpielerInfo(privateCurrentTurn.sessionToken).hand.size)
     }
 }
