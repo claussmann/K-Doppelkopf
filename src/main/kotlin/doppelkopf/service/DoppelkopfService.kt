@@ -5,6 +5,7 @@ import doppelkopf.game.Position
 import doppelkopf.game.Spieler
 import doppelkopf.model.SpielerPrivate
 import doppelkopf.model.SpielerPublic
+import jdk.internal.org.jline.utils.Colors.s
 import java.lang.RuntimeException
 import java.util.UUID
 
@@ -28,6 +29,11 @@ class DoppelkopfService {
             if (s.pos == pos) return SpielerPublic(s)
         }
         throw IllegalArgumentException("Spieler an dieser Position existiert nicht.")
+    }
+
+    fun getPrivateSpielerInfo(sessionToken: String): SpielerPrivate {
+        val s = spielers[sessionToken] ?: throw IllegalArgumentException("Token nicht korrekt.")
+        return SpielerPrivate(s, sessionToken)
     }
 
     private fun isFull(): Boolean {
