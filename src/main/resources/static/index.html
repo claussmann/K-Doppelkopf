@@ -1,7 +1,87 @@
+<!DOCTYPE html>
 <html>
+<!-- Head -->
 <head>
+    <title>Doppelkopf</title>
+    <meta charset="utf-8"/>
+    <link href="style.css" rel="stylesheet"/>
+    <script src="main.js"></script>
 </head>
+
+
+<!-- Body -->
 <body>
-<h1>Hello Ktor!</h1>
+    <div class="title_bar">
+        <span id="display_player_name"></span>&nbsp;&nbsp;
+        <span id="display_player_token"></span>
+    </div>
+
+    <div class="center">
+
+        <!-- Login Mask -->
+        <div id="join">
+            <input type="text" id="pname" placeholder="Player Name"/>
+            <button class="std_btn" onclick="join(pname.value)">Join</button>
+        </div>
+
+
+        <!-- Ansicht beim Spiel -->
+        <div id="play" style="display: none;">
+            <table class="t">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="t_cell_name"><span id="player_top" class="t_name">--</span>&nbsp;<span id="points_top" class="t_name">--</span><br/><span id="vorbehalt_top" class="t_vorbehalt"></span></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="t_cell_card"><button class="std_btn t_card" id="t_card_top" disabled>--</button></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="t_cell_name"><span id="player_left" class="t_name">--</span>&nbsp;<span id="points_left" class="t_name">--</span><br/><span id="vorbehalt_left" class="t_vorbehalt"></span></td>
+                    <td class="t_cell_card"><button class="std_btn t_card" id="t_card_left" disabled>--</button></td>
+                    <td></td>
+                    <td class="t_cell_card"><button class="std_btn t_card" id="t_card_right" disabled>--</button></td>
+                    <td class="t_cell_name"><span id="player_right" class="t_name">--</span>&nbsp;<span id="points_right" class="t_name">--</span><br/><span id="vorbehalt_right" class="t_vorbehalt"></span></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="t_cell_card"><button class="std_btn t_card" id="t_card_bottom" disabled>--</button></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="t_cell_name"><span id="player_bottom" class="t_name">--</span>&nbsp;<span id="points_bottom" class="t_name">--</span><br/><span id="vorbehalt_bottom" class="t_vorbehalt"></span></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+
+            <!-- Eigene Karten -->
+            <div class="own_card_hand">
+                <button class="std_btn card" onclick="lay_card(0)" id="card_0">--</button>
+                <button class="std_btn card" onclick="lay_card(1)" id="card_1">--</button>
+                <button class="std_btn card" onclick="lay_card(2)" id="card_2">--</button>
+                <button class="std_btn card" onclick="lay_card(3)" id="card_3">--</button>
+                <button class="std_btn card" onclick="lay_card(4)" id="card_4">--</button>
+                <button class="std_btn card" onclick="lay_card(5)" id="card_5">--</button>
+                <br/>
+                <button class="std_btn card" onclick="lay_card(6)" id="card_6">--</button>
+                <button class="std_btn card" onclick="lay_card(7)" id="card_7">--</button>
+                <button class="std_btn card" onclick="lay_card(8)" id="card_8">--</button>
+                <button class="std_btn card" onclick="lay_card(9)" id="card_9">--</button>
+                <button class="std_btn card" onclick="lay_card(10)" id="card_10">--</button>
+                <button class="std_btn card" onclick="lay_card(11)" id="card_11">--</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

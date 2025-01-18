@@ -1,0 +1,97 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+    background-color: #f1c857;
+}
+
+body {
+    font: 100% Roboto, Arial, sans-serif;
+}
+
+.title_bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 75px;
+    background-color: #131313;
+    color: #bbbbbb;
+    font-size: x-large;
+    font-weight: bold;
+    padding-top: 10px;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+input[type=text]{
+    padding: 7px 10px;
+    margin: 5px 2px;
+    display: inline-block;
+    border: 1px solid #868686;
+    border-radius: 6px;
+}
+
+.std_btn {
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    padding: 7px 10px;
+    margin: 5px 2px;
+}
+
+.own_card_hand {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.card {
+    background-color: #f4efff;
+    color: black;
+    border: 2px solid #0f0f0f;
+    border-radius: 4px;
+    font-size: 20px;
+    padding: 30px 20px;
+    min-height: 120px;
+    min-width: 80px;
+}
+
+.t_card {
+    background-color: #bbbbbb;
+    color: black;
+    border: 2px solid #0f0f0f;
+    border-radius: 4px;
+    font-size: 20px;
+    padding: 24px 16px;
+    min-height: 90px;
+    min-width: 60px;
+}
+
+.t_cell_card {
+    width: 150px;
+    text-align: center;
+}
+
+.t_name {
+    color: #131313;
+    font-size: 20pt;
+}
+
+.t_cell_name {
+    width: 100px;
+    text-align: center;
+}
+
+.t_name_active {
+    color: #6e0606;
+    font-weight: 600;
+}
+
+.t {
+    margin-left: auto;
+    margin-right: auto;
+}
