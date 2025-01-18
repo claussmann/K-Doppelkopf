@@ -2,7 +2,23 @@ package doppelkopf.game
 
 import kotlin.test.*
 
-class GameTest {
+class DoppelkopfSpielTest {
+
+    @Test
+    fun testIllegaleSpieler() {
+        val peter = Spieler("Peter", Position.OBEN)
+        val jan = Spieler("Jan", Position.RECHTS)
+        val fred = Spieler("Fred", Position.UNTEN)
+        val ann = Spieler("Ann", Position.LINKS)
+        val berta = Spieler("Ann", Position.LINKS)
+
+        // Zu wenige
+        assertFailsWith(IllegalArgumentException::class) { DoppelkopfSpiel(arrayOf(peter, jan, fred)) }
+        // Gleiche position
+        assertFailsWith(IllegalArgumentException::class) { DoppelkopfSpiel(arrayOf(peter, jan, ann, berta)) }
+        // Zu viele
+        assertFailsWith(IllegalArgumentException::class) { DoppelkopfSpiel(arrayOf(peter, jan, fred, ann, berta)) }
+    }
 
     @Test
     fun testCompleteGame() {
@@ -11,7 +27,7 @@ class GameTest {
         val jan = Spieler("Jan", Position.RECHTS)
         val fred = Spieler("Fred", Position.UNTEN)
         val ann = Spieler("Ann", Position.LINKS)
-        val g = Game(arrayOf(peter, jan, fred, ann))
+        val g = DoppelkopfSpiel(arrayOf(peter, jan, fred, ann))
 
         // Spielern feste Karten geben
         peter.neueHand(arrayListOf(

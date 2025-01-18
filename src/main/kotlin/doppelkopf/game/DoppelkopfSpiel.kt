@@ -1,8 +1,6 @@
 package doppelkopf.game
 
-import kotlin.math.absoluteValue
-
-class Game(val spieler: Array<Spieler>) {
+class DoppelkopfSpiel(val spieler: Array<Spieler>) {
     val karten = Kartenstapel()
     var currentRunde: Runde? = null
     var linksVorbehalt: Spielmodus? = null
@@ -10,10 +8,15 @@ class Game(val spieler: Array<Spieler>) {
     var rechtsVorbehalt: Spielmodus? = null
     var untenVorbehalt: Spielmodus? = null
     val geber: Position = Position.LINKS
+    var ansager: Position = geber.next()
     val rundenauswertungen = ArrayList<Rundenauswertung>()
 
     init {
         if (spieler.size != 4) throw IllegalArgumentException("Es werden genau 4 Spieler erwartet.")
+        if (spieler.filter { it.pos == Position.OBEN }.size != 1) throw IllegalArgumentException("Jede Position muss belegt sein.")
+        if (spieler.filter { it.pos == Position.UNTEN }.size != 1) throw IllegalArgumentException("Jede Position muss belegt sein.")
+        if (spieler.filter { it.pos == Position.LINKS }.size != 1) throw IllegalArgumentException("Jede Position muss belegt sein.")
+        if (spieler.filter { it.pos == Position.RECHTS }.size != 1) throw IllegalArgumentException("Jede Position muss belegt sein.")
         neuGeben()
     }
 
@@ -44,19 +47,14 @@ class Game(val spieler: Array<Spieler>) {
 
     fun vorbehaltAnsagen(vorbehalt: Spielmodus, pos: Position) {
         if (currentRunde != null) throw IllegalerZugException("Vorbehalte können gerade nicht angesagt werden.")
+        if (ansager != pos) throw IllegalerZugException("Spieler ist nicht dran mit ansagen.")
         when (pos) {
-            Position.LINKS -> if (linksVorbehalt == null) linksVorbehalt =
-                vorbehalt else throw IllegalerZugException("Bereits Vorbehalt angesagt..")
-
-            Position.RECHTS -> if (rechtsVorbehalt == null) rechtsVorbehalt =
-                vorbehalt else throw IllegalerZugException("Bereits Vorbehalt angesagt..")
-
-            Position.OBEN -> if (obenVorbehalt == null) obenVorbehalt =
-                vorbehalt else throw IllegalerZugException("Bereits Vorbehalt angesagt..")
-
-            Position.UNTEN -> if (untenVorbehalt == null) untenVorbehalt =
-                vorbehalt else throw IllegalerZugException("Bereits Vorbehalt angesagt..")
+            Position.LINKS -> linksVorbehalt = vorbehalt
+            Position.RECHTS -> rechtsVorbehalt = vorbehalt
+            Position.OBEN -> obenVorbehalt = vorbehalt
+            Position.UNTEN -> untenVorbehalt = vorbehalt
         }
+        ansager = ansager.next()
         if (linksVorbehalt != null && rechtsVorbehalt != null && untenVorbehalt != null && obenVorbehalt != null) {
             var bestPos = geber.next()
             var bestVorbehalt = vorbehaltVon(bestPos)!!
@@ -65,7 +63,7 @@ class Game(val spieler: Array<Spieler>) {
             for (i in 1..3) {
                 currentPos = currentPos.next()
                 currentVorbehalt = vorbehaltVon(currentPos)!!
-                if (currentVorbehalt.vorrangVor(bestVorbehalt)){
+                if (currentVorbehalt.vorrangVor(bestVorbehalt)) {
                     bestPos = currentPos
                     bestVorbehalt = currentVorbehalt
                 }
@@ -77,7 +75,8 @@ class Game(val spieler: Array<Spieler>) {
     }
 
     fun werIstDran(): Position {
-        return currentRunde?.werIstDran() ?: geber.next()
+        val r = currentRunde
+        return r?.werIstDran() ?: ansager
     }
 
     fun rundenauswertungen(): ArrayList<Rundenauswertung> {
@@ -94,6 +93,7 @@ class Game(val spieler: Array<Spieler>) {
                     if (s.hasKarte(Karte.KR_D)) s.partei = Partei.RE else s.partei = Partei.KONTRA
                 }
             }
+
             Spielmodus.HOCHZEIT -> TODO()
             Spielmodus.ARMUT -> TODO()
             Spielmodus.SOLO_REINES_KARO, Spielmodus.SOLO_REINES_HERZ,
@@ -105,6 +105,7 @@ class Game(val spieler: Array<Spieler>) {
                 TODO()
                 // Bei Solo muss man sich direkt nach dem vorbehalt ansagen merken, wer das solo spielt.
             }
+
             null -> TODO()
         }
     }
@@ -140,7 +141,7 @@ class Game(val spieler: Array<Spieler>) {
                 punkteRe,
                 currentRunde!!.welcherSpielmodus(),
                 gegenDieAlten
-                )
+            )
         )
         currentRunde = null
     }
