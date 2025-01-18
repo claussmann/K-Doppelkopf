@@ -8,6 +8,7 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
     var rechtsVorbehalt: Spielmodus? = null
     var untenVorbehalt: Spielmodus? = null
     val geber: Position = Position.LINKS
+    var ansager: Position = geber.next()
     val rundenauswertungen = ArrayList<Rundenauswertung>()
 
     init {
@@ -46,19 +47,14 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
 
     fun vorbehaltAnsagen(vorbehalt: Spielmodus, pos: Position) {
         if (currentRunde != null) throw IllegalerZugException("Vorbehalte können gerade nicht angesagt werden.")
+        if (ansager != pos) throw IllegalerZugException("Spieler ist nicht dran mit ansagen.")
         when (pos) {
-            Position.LINKS -> if (linksVorbehalt == null) linksVorbehalt =
-                vorbehalt else throw IllegalerZugException("Bereits Vorbehalt angesagt..")
-
-            Position.RECHTS -> if (rechtsVorbehalt == null) rechtsVorbehalt =
-                vorbehalt else throw IllegalerZugException("Bereits Vorbehalt angesagt..")
-
-            Position.OBEN -> if (obenVorbehalt == null) obenVorbehalt =
-                vorbehalt else throw IllegalerZugException("Bereits Vorbehalt angesagt..")
-
-            Position.UNTEN -> if (untenVorbehalt == null) untenVorbehalt =
-                vorbehalt else throw IllegalerZugException("Bereits Vorbehalt angesagt..")
+            Position.LINKS -> linksVorbehalt = vorbehalt
+            Position.RECHTS -> rechtsVorbehalt = vorbehalt
+            Position.OBEN -> obenVorbehalt = vorbehalt
+            Position.UNTEN -> untenVorbehalt = vorbehalt
         }
+        ansager = ansager.next()
         if (linksVorbehalt != null && rechtsVorbehalt != null && untenVorbehalt != null && obenVorbehalt != null) {
             var bestPos = geber.next()
             var bestVorbehalt = vorbehaltVon(bestPos)!!
@@ -79,7 +75,8 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
     }
 
     fun werIstDran(): Position {
-        return currentRunde?.werIstDran() ?: geber.next()
+        val r = currentRunde
+        return r?.werIstDran() ?: ansager
     }
 
     fun rundenauswertungen(): ArrayList<Rundenauswertung> {
