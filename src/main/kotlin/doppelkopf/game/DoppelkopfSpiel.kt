@@ -3,10 +3,6 @@ package doppelkopf.game
 class DoppelkopfSpiel(val spieler: Array<Spieler>) {
     val karten = Kartenstapel()
     var currentRunde: Runde? = null
-    var linksVorbehalt: Spielmodus? = null
-    var obenVorbehalt: Spielmodus? = null
-    var rechtsVorbehalt: Spielmodus? = null
-    var untenVorbehalt: Spielmodus? = null
     val geber: Position = Position.LINKS
     var ansager: Position = geber.next()
     val rundenauswertungen = ArrayList<Rundenauswertung>()
@@ -24,11 +20,8 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
         for (s in spieler) {
             s.neueHand(karten.zieheKarten())
             s.partei = Partei.UNBEKANNT
+            s.vorbehalt = null
         }
-        linksVorbehalt = null
-        rechtsVorbehalt = null
-        obenVorbehalt = null
-        untenVorbehalt = null
     }
 
     fun karteLegen(karte: Karte, pos: Position) {
@@ -47,15 +40,11 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
 
     fun vorbehaltAnsagen(vorbehalt: Spielmodus, pos: Position) {
         if (currentRunde != null) throw IllegalerZugException("Vorbehalte können gerade nicht angesagt werden.")
-        if (ansager != pos) throw IllegalerZugException("Spieler ist nicht dran mit ansagen.")
-        when (pos) {
-            Position.LINKS -> linksVorbehalt = vorbehalt
-            Position.RECHTS -> rechtsVorbehalt = vorbehalt
-            Position.OBEN -> obenVorbehalt = vorbehalt
-            Position.UNTEN -> untenVorbehalt = vorbehalt
-        }
+        if (ansager != pos || spielerAnPos(pos).vorbehalt != null) throw IllegalerZugException("Spieler ist nicht dran mit ansagen.")
+        spielerAnPos(pos).vorbehalt = vorbehalt
         ansager = ansager.next()
-        if (linksVorbehalt != null && rechtsVorbehalt != null && untenVorbehalt != null && obenVorbehalt != null) {
+        if (vorbehaltVon(Position.LINKS) != null && vorbehaltVon(Position.RECHTS) != null
+            && vorbehaltVon(Position.OBEN) != null && vorbehaltVon(Position.UNTEN) != null) {
             var bestPos = geber.next()
             var bestVorbehalt = vorbehaltVon(bestPos)!!
             var currentPos = bestPos
@@ -81,6 +70,17 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
 
     fun rundenauswertungen(): ArrayList<Rundenauswertung> {
         return rundenauswertungen
+    }
+
+    fun vorbehaltVon(pos: Position): Spielmodus? {
+        return spielerAnPos(pos).vorbehalt
+    }
+
+    private fun spielerAnPos(pos: Position): Spieler {
+        for (s in spieler) {
+            if (s.pos == pos) return s
+        }
+        throw RuntimeException("Spieler an dieser Position existiert nicht.")
     }
 
     private fun ermittleParteien() {
@@ -144,14 +144,5 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
             )
         )
         currentRunde = null
-    }
-
-    private fun vorbehaltVon(pos: Position): Spielmodus? {
-        return when (pos) {
-            Position.LINKS -> linksVorbehalt
-            Position.RECHTS -> rechtsVorbehalt
-            Position.OBEN -> obenVorbehalt
-            Position.UNTEN -> untenVorbehalt
-        }
     }
 }
