@@ -12,7 +12,20 @@ body {
 .title_bar {
     position: fixed;
     width: 100vw;
-    height: 75px;
+    height: 110px;
+    background-color: #252525;
+    color: #bbbbbb;
+    font-size: xxx-large;
+    font-weight: bold;
+}
+
+.footer_bar {
+    position: fixed;
+    width: 100vw;
+    bottom: 0;
+    height: 60px;
+    padding-top: 5px;
+    padding-left: 5px;
     background-color: #252525;
     color: #bbbbbb;
     font-size: x-large;
@@ -38,6 +51,12 @@ input[type=text]{
     text-align: center;
     text-decoration: none;
     display: inline-block;
+    padding: 7px 10px;
+    margin: 5px 2px;
+}
+
+.std_select {
+    text-decoration: none;
     padding: 7px 10px;
     margin: 5px 2px;
 }

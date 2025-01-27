@@ -6,6 +6,7 @@ import doppelkopf.game.Position
 import doppelkopf.model.CardPutRequest
 import doppelkopf.model.JoinRequest
 import doppelkopf.model.UpdateRequest
+import doppelkopf.model.VorbehaltRequest
 import doppelkopf.service.FehlerhaftesTokenException
 import doppelkopf.service.SpielerNichtGefundenException
 import io.ktor.http.*
@@ -39,6 +40,20 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.BadRequest, e.message ?: "Unbekannter Fehler")
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
+            }
+        }
+
+        post("/putvorbehalt") {
+            try {
+                val body = call.receive<VorbehaltRequest>()
+                call.respond(service.vorbehaltAnsagen(body.token, body.vorbehalt))
+            } catch (e: FehlerhaftesTokenException) {
+                call.respond(HttpStatusCode.Unauthorized)
+            } catch (e: IllegalerZugException) {
+                call.respond(HttpStatusCode.BadRequest, e.message ?: "Unbekannter Fehler")
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.InternalServerError)
+                println(e.message)
             }
         }
 

@@ -13,8 +13,8 @@
 <!-- Body -->
 <body>
     <div class="title_bar">
-        <img src="logo.png" alt="Logo" style="position: fixed; left: 5px; top: 2px" height="70px">
-        <span id="display_player_name" style="position: fixed; left: 100px; top: 20px"></span>
+        <img src="logo.png" alt="Logo" style="position: fixed; left: 5px; top: 5px" height="100">
+        <span id="display_player_name" style="position: fixed; left: 130px; top: 20px"></span>
         <span id="display_player_party" style="position: fixed; right: 30px; top: 20px"></span>
     </div>
 
@@ -156,6 +156,16 @@
                 </button>
             </div>
         </div>
+    </div>
+
+    <!--Footer-->
+    <div class="footer_bar">
+        <label for="vor"></label>
+        <select id="vor" class="std_select">
+            <option value="NORMAL" selected="selected">Kein Vorbehalt</option>
+            <option value="SOLO">Solo</option>
+        </select>
+        <button class="std_btn" onclick="vorbehalt(vor.value)">Vorbehalt ansagen</button>
     </div>
 </body>
 </html>

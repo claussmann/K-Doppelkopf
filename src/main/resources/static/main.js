@@ -54,7 +54,6 @@ async function join(player_name) {
     document.getElementById("join").style.display = "none";
     document.getElementById("play").style.display = "block";
     await refresh()
-    updateUI()
     PERIODIC_CALL = setInterval(refresh, PERIODIC_CALL_INTERVAL);
 }
 
@@ -100,7 +99,7 @@ function updateUI() {
     }
     if (SELF != null) {
         document.getElementById("display_player_name").textContent=SELF.name;
-        document.getElementById("display_player_party").textContent=SELF.partei;
+        if (SELF.partei != "UNBEKANNT") document.getElementById("display_player_party").textContent=SELF.partei;
         for (let i = 0; i < 12; i++){
             document.getElementById("card_" + i + "_KA").style.display="none";
             document.getElementById("card_" + i + "_HE").style.display="none";
@@ -136,4 +135,10 @@ async function layCard(pos) {
             updateUI();
         }
     }
+}
+
+async function vorbehalt(vorbehalt) {
+    console.log(vorbehalt)
+    resp = await api_post_body("/putvorbehalt", {"token" : SELF.sessionToken, "vorbehalt" : vorbehalt});
+    await refresh()
 }
