@@ -5,6 +5,7 @@ import doppelkopf.game.Karte
 import doppelkopf.game.Position
 import doppelkopf.model.CardPutRequest
 import doppelkopf.model.JoinRequest
+import doppelkopf.model.UpdateRequest
 import doppelkopf.service.FehlerhaftesTokenException
 import doppelkopf.service.SpielerNichtGefundenException
 import io.ktor.http.*
@@ -41,51 +42,10 @@ fun Application.configureRouting() {
             }
         }
 
-        get("/player/links") {
+        post("/update") {
             try {
-                call.respond(service.getPublicSpielerInfo(Position.LINKS))
-            } catch (e: SpielerNichtGefundenException) {
-                call.respond(HttpStatusCode.NotFound)
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError)
-            }
-        }
-
-        get("/player/rechts") {
-            try {
-                call.respond(service.getPublicSpielerInfo(Position.RECHTS))
-            } catch (e: SpielerNichtGefundenException) {
-                call.respond(HttpStatusCode.NotFound)
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError)
-            }
-        }
-
-        get("/player/oben") {
-            try {
-                call.respond(service.getPublicSpielerInfo(Position.OBEN))
-            } catch (e: SpielerNichtGefundenException) {
-                call.respond(HttpStatusCode.NotFound)
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError)
-            }
-        }
-
-        get("/player/unten") {
-            try {
-                call.respond(service.getPublicSpielerInfo(Position.UNTEN))
-            } catch (e: SpielerNichtGefundenException) {
-                call.respond(HttpStatusCode.NotFound)
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError)
-            }
-        }
-
-        get("/player/private/{sessionToken}") {
-            val token = (call.parameters["sessionToken"] ?: call.respond(HttpStatusCode.BadRequest)).toString()
-            if (token.length > 40) call.respond(HttpStatusCode.BadRequest)
-            try {
-                call.respond(service.getPrivateSpielerInfo(token))
+                val body = call.receive<UpdateRequest>()
+                call.respond(service.getTableUpdate(body.token))
             } catch (e: FehlerhaftesTokenException) {
                 call.respond(HttpStatusCode.Unauthorized)
             } catch (e: Exception) {

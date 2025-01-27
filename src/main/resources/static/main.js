@@ -3,6 +3,7 @@ let LEFT = null;
 let RIGHT = null;
 let BOTTOM = null;
 let TOP = null;
+let CURRENT_TURN = "LINKS"
 const DEBUG = true;
 const PERIODIC_CALL_INTERVAL = 10000
 let PERIODIC_CALL;
@@ -50,22 +51,23 @@ async function api_post_body(url, body) {
 
 async function join(player_name) {
     SELF = await api_post_body("/join", {"spielername" : player_name});
-    await refresh()
-    updateUI()
     document.getElementById("join").style.display = "none";
     document.getElementById("play").style.display = "block";
+    await refresh()
+    updateUI()
     PERIODIC_CALL = setInterval(refresh, PERIODIC_CALL_INTERVAL);
 }
 
 async function refresh() {
-    console.log("Refreshing...")
-    LEFT = await api_get("/player/links");
-    RIGHT = await api_get("/player/rechts");
-    TOP = await api_get("/player/oben");
-    BOTTOM = await api_get("/player/unten");
-    tmp = await api_get("/player/private/" + SELF.sessionToken);
-    tmp.hand.sort(cardOrderCompare)
-    SELF = tmp
+    console.log("Refreshing...");
+    let resp = await api_post_body("/update", {"token": SELF.sessionToken});
+    LEFT = resp.links;
+    RIGHT = resp.rechts;
+    TOP = resp.oben;
+    BOTTOM = resp.unten;
+    resp.playerself.hand.sort(cardOrderCompare);
+    SELF = resp.playerself
+    CURRENT_TURN = resp.currentTurn
     updateUI()
 }
 
@@ -113,6 +115,16 @@ function updateUI() {
             if (SELF.hand[i].startsWith("KR")) document.getElementById("card_" + i + "_KR").style.display="block";
             document.getElementById("card_" + i + "_val").textContent=SELF.hand[i].split("_")[1];
         }
+    }
+    document.getElementById("player_left").style.color="#000000";
+    document.getElementById("player_right").style.color="#000000";
+    document.getElementById("player_top").style.color="#000000";
+    document.getElementById("player_bottom").style.color="#000000";
+    switch (CURRENT_TURN) {
+        case "LINKS": document.getElementById("player_left").style.color="#6e0606"; break;
+        case "RECHTS": document.getElementById("player_right").style.color="#6e0606"; break;
+        case "OBEN": document.getElementById("player_top").style.color="#6e0606"; break;
+        case "UNTEN": document.getElementById("player_bottom").style.color="#6e0606"; break;
     }
 }
 

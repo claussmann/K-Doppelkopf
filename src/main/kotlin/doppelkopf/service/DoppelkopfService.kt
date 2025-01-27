@@ -3,6 +3,8 @@ package doppelkopf.service
 import doppelkopf.game.*
 import doppelkopf.model.SpielerPrivate
 import doppelkopf.model.SpielerPublic
+import doppelkopf.model.UpdateRequest
+import doppelkopf.model.UpdateResponse
 import java.lang.RuntimeException
 import java.util.UUID
 
@@ -32,6 +34,30 @@ class DoppelkopfService {
         if (sessionToken.length > 50) throw FehlerhaftesTokenException("Token nicht korrekt.")
         val s = lobby[sessionToken] ?: throw FehlerhaftesTokenException("Token nicht korrekt.")
         return SpielerPrivate(s, sessionToken)
+    }
+
+    fun getTableUpdate(sessionToken: String): UpdateResponse {
+        val spielerSelf = getPrivateSpielerInfo(sessionToken)
+        var spielerLinks: SpielerPublic? = null
+        var spielerOben: SpielerPublic? = null
+        var spielerRechts: SpielerPublic? = null
+        var spielerUnten: SpielerPublic? = null
+        for (s in lobby.values) {
+            when (s.pos) {
+                Position.LINKS -> spielerLinks = SpielerPublic(s)
+                Position.OBEN -> spielerOben = SpielerPublic(s)
+                Position.RECHTS -> spielerRechts = SpielerPublic(s)
+                Position.UNTEN -> spielerUnten = SpielerPublic(s)
+            }
+        }
+        return UpdateResponse(
+            spielerSelf,
+            game?.werIstDran() ?: Position.OBEN,
+            spielerLinks,
+            spielerOben,
+            spielerRechts,
+            spielerUnten
+        )
     }
 
     fun getCurrentTurnPlayer(): SpielerPublic {
