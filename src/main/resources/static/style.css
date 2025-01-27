@@ -73,8 +73,8 @@ input[type=text]{
     border-radius: 4px;
     font-size: 30px;
     padding: 30px 20px;
-    min-height: 120px;
-    min-width: 80px;
+    min-height: 140px;
+    min-width: 85px;
 }
 
 .t_card {

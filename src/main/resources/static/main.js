@@ -3,9 +3,13 @@ let LEFT = null;
 let RIGHT = null;
 let BOTTOM = null;
 let TOP = null;
+let CARD_LEFT = null;
+let CARD_RIGHT = null;
+let CARD_BOTTOM = null;
+let CARD_TOP = null;
 let CURRENT_TURN = "LINKS"
 const DEBUG = true;
-const PERIODIC_CALL_INTERVAL = 10000
+const PERIODIC_CALL_INTERVAL = 5000
 let PERIODIC_CALL;
 const POS_TO_LABEL = {
     "LINKS" : "left",
@@ -64,6 +68,10 @@ async function refresh() {
     RIGHT = resp.rechts;
     TOP = resp.oben;
     BOTTOM = resp.unten;
+    CARD_LEFT = resp.gelegtLinks;
+    CARD_TOP = resp.gelegtOben;
+    CARD_RIGHT = resp.gelegtRechts;
+    CARD_BOTTOM = resp.gelegtUnten;
     resp.playerself.hand.sort(cardOrderCompare);
     SELF = resp.playerself
     CURRENT_TURN = resp.currentTurn
@@ -85,29 +93,29 @@ function updateUI() {
         document.getElementById("player_left").textContent = LEFT.name;
         document.getElementById("points_left").textContent = LEFT.punkte;
         document.getElementById("vorbehalt_left").textContent = LEFT.vorbehalt;
-        if (SELF.position == "LINKS") document.getElementById("player_left").textContent = "Du";
+        if (SELF.position === "LINKS") document.getElementById("player_left").textContent = "Du";
     }
     if (TOP != null) {
         document.getElementById("player_top").textContent = TOP.name;
         document.getElementById("points_top").textContent = TOP.punkte;
         document.getElementById("vorbehalt_top").textContent = TOP.vorbehalt;
-        if (SELF.position == "OBEN") document.getElementById("player_top").textContent = "Du";
+        if (SELF.position === "OBEN") document.getElementById("player_top").textContent = "Du";
     }
     if (RIGHT != null) {
         document.getElementById("player_right").textContent = RIGHT.name;
         document.getElementById("points_right").textContent = RIGHT.punkte;
         document.getElementById("vorbehalt_right").textContent = RIGHT.vorbehalt;
-        if (SELF.position == "RECHTS") document.getElementById("player_right").textContent = "Du";
+        if (SELF.position === "RECHTS") document.getElementById("player_right").textContent = "Du";
     }
     if (BOTTOM != null) {
         document.getElementById("player_bottom").textContent = BOTTOM.name;
         document.getElementById("points_bottom").textContent = BOTTOM.punkte;
         document.getElementById("vorbehalt_bottom").textContent = BOTTOM.vorbehalt;
-        if (SELF.position == "UNTEN") document.getElementById("player_bottom").textContent = "Du";
+        if (SELF.position === "UNTEN") document.getElementById("player_bottom").textContent = "Du";
     }
     if (SELF != null) {
         document.getElementById("display_player_name").textContent=SELF.name;
-        if (SELF.partei != "UNBEKANNT") document.getElementById("display_player_party").textContent=SELF.partei;
+        if (SELF.partei !== "UNBEKANNT") document.getElementById("display_player_party").textContent=SELF.partei;
         for (let i = 0; i < 12; i++){
             document.getElementById("card_" + i + "_KA").style.display="none";
             document.getElementById("card_" + i + "_HE").style.display="none";
@@ -133,15 +141,21 @@ function updateUI() {
         case "OBEN": document.getElementById("player_top").style.color="#6e0606"; break;
         case "UNTEN": document.getElementById("player_bottom").style.color="#6e0606"; break;
     }
+
+    document.getElementById("t_card_left").textContent="";
+    document.getElementById("t_card_top").textContent="";
+    document.getElementById("t_card_right").textContent="";
+    document.getElementById("t_card_bottom").textContent="";
+    if (CARD_LEFT != null) document.getElementById("t_card_left").textContent=CARD_LEFT;
+    if (CARD_TOP != null) document.getElementById("t_card_top").textContent=CARD_TOP;
+    if (CARD_RIGHT != null) document.getElementById("t_card_right").textContent=CARD_RIGHT;
+    if (CARD_BOTTOM != null) document.getElementById("t_card_bottom").textContent=CARD_BOTTOM;
 }
 
 async function layCard(pos) {
     if (SELF.hand.length >= pos) {
         resp = await api_post_body("/putcard", {"token" : SELF.sessionToken, "card" : SELF.hand[pos]});
-        if (resp != null) {
-            SELF.hand.splice(pos, 1);
-            updateUI();
-        }
+        await refresh()
     }
 }
 

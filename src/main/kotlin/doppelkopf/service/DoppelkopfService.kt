@@ -56,7 +56,12 @@ class DoppelkopfService {
             spielerLinks,
             spielerOben,
             spielerRechts,
-            spielerUnten
+            spielerUnten,
+            game?.aktuellerSpielmodus(),
+            game?.gelegtVon(Position.LINKS),
+            game?.gelegtVon(Position.OBEN),
+            game?.gelegtVon(Position.RECHTS),
+            game?.gelegtVon(Position.UNTEN),
         )
     }
 
