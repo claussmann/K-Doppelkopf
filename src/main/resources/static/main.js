@@ -84,18 +84,26 @@ function updateUI() {
     if (LEFT != null) {
         document.getElementById("player_left").textContent = LEFT.name;
         document.getElementById("points_left").textContent = LEFT.punkte;
+        document.getElementById("vorbehalt_left").textContent = LEFT.vorbehalt;
+        if (SELF.position == "LINKS") document.getElementById("player_left").textContent = "Du";
     }
     if (TOP != null) {
         document.getElementById("player_top").textContent = TOP.name;
         document.getElementById("points_top").textContent = TOP.punkte;
+        document.getElementById("vorbehalt_top").textContent = TOP.vorbehalt;
+        if (SELF.position == "OBEN") document.getElementById("player_top").textContent = "Du";
     }
     if (RIGHT != null) {
         document.getElementById("player_right").textContent = RIGHT.name;
         document.getElementById("points_right").textContent = RIGHT.punkte;
+        document.getElementById("vorbehalt_right").textContent = RIGHT.vorbehalt;
+        if (SELF.position == "RECHTS") document.getElementById("player_right").textContent = "Du";
     }
     if (BOTTOM != null) {
         document.getElementById("player_bottom").textContent = BOTTOM.name;
         document.getElementById("points_bottom").textContent = BOTTOM.punkte;
+        document.getElementById("vorbehalt_bottom").textContent = BOTTOM.vorbehalt;
+        if (SELF.position == "UNTEN") document.getElementById("player_bottom").textContent = "Du";
     }
     if (SELF != null) {
         document.getElementById("display_player_name").textContent=SELF.name;

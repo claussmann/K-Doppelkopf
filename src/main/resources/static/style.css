@@ -95,17 +95,24 @@ input[type=text]{
 
 .t_name {
     color: #131313;
-    font-size: 20pt;
+    font-size: 22pt;
+    font-weight: bold;
+}
+
+.t_points {
+    color: #131313;
+    font-size: 18pt;
+    font-weight: bold;
+}
+
+.t_vorbehalt {
+    color: #131313;
+    font-size: 12pt;
 }
 
 .t_cell_name {
     width: 100px;
     text-align: center;
-}
-
-.t_name_active {
-    color: #6e0606;
-    font-weight: 600;
 }
 
 .t {
