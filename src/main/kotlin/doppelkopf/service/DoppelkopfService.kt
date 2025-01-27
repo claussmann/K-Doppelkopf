@@ -25,11 +25,12 @@ class DoppelkopfService {
         for (s in lobby.values) {
             if (s.pos == pos) return SpielerPublic(s)
         }
-        throw IllegalArgumentException("Spieler an dieser Position existiert nicht.")
+        throw SpielerNichtGefundenException("Spieler an dieser Position existiert nicht.")
     }
 
     fun getPrivateSpielerInfo(sessionToken: String): SpielerPrivate {
-        val s = lobby[sessionToken] ?: throw IllegalArgumentException("Token nicht korrekt.")
+        if (sessionToken.length > 50) throw FehlerhaftesTokenException("Token nicht korrekt.")
+        val s = lobby[sessionToken] ?: throw FehlerhaftesTokenException("Token nicht korrekt.")
         return SpielerPrivate(s, sessionToken)
     }
 
@@ -58,14 +59,14 @@ class DoppelkopfService {
 
     private fun randomPosition(): Position {
         if (isFull()) {
-            throw RuntimeException("Spiel ist bereits voll.")
+            throw IllegalerZugException("Spiel ist bereits voll.")
         }
         var positions = listOf(Position.OBEN, Position.LINKS, Position.RECHTS, Position.UNTEN)
         for (s in lobby.values) {
             positions = positions.filter { s.pos != it }
         }
         if (positions.isEmpty()) {
-            throw RuntimeException("Spiel ist bereits voll.")
+            throw IllegalerZugException("Spiel ist bereits voll.")
         }
         return positions.random()
     }

@@ -4,7 +4,7 @@ let RIGHT = null;
 let BOTTOM = null;
 let TOP = null;
 const DEBUG = true;
-const PERIODIC_CALL_INTERVAL = 5000
+const PERIODIC_CALL_INTERVAL = 10000
 let PERIODIC_CALL;
 const POS_TO_LABEL = {
     "LINKS" : "left",
@@ -112,6 +112,16 @@ function updateUI() {
             if (SELF.hand[i].startsWith("PI")) document.getElementById("card_" + i + "_PI").style.display="block";
             if (SELF.hand[i].startsWith("KR")) document.getElementById("card_" + i + "_KR").style.display="block";
             document.getElementById("card_" + i + "_val").textContent=SELF.hand[i].split("_")[1];
+        }
+    }
+}
+
+async function layCard(pos) {
+    if (SELF.hand.length >= pos) {
+        resp = await api_post_body("/putcard", {"token" : SELF.sessionToken, "card" : SELF.hand[pos]});
+        if (resp != null) {
+            SELF.hand.splice(pos, 1);
+            updateUI();
         }
     }
 }
