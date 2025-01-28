@@ -10,15 +10,26 @@ body {
 }
 
 .title_bar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 75px;
+    position: fixed;
+    width: 100vw;
+    height: 110px;
+    background-color: #252525;
+    color: #bbbbbb;
+    font-size: xxx-large;
+    font-weight: bold;
+}
+
+.footer_bar {
+    position: fixed;
+    width: 100vw;
+    bottom: 0;
+    height: 60px;
+    padding-top: 5px;
+    padding-left: 5px;
     background-color: #252525;
     color: #bbbbbb;
     font-size: x-large;
     font-weight: bold;
-    padding-top: 10px;
 }
 
 .center {
@@ -44,6 +55,12 @@ input[type=text]{
     margin: 5px 2px;
 }
 
+.std_select {
+    text-decoration: none;
+    padding: 7px 10px;
+    margin: 5px 2px;
+}
+
 .own_card_hand {
     margin-top: 50px;
     text-align: center;
@@ -54,10 +71,10 @@ input[type=text]{
     color: black;
     border: 2px solid #0f0f0f;
     border-radius: 4px;
-    font-size: 20px;
+    font-size: 30px;
     padding: 30px 20px;
-    min-height: 120px;
-    min-width: 80px;
+    min-height: 140px;
+    min-width: 85px;
 }
 
 .t_card {
@@ -78,17 +95,24 @@ input[type=text]{
 
 .t_name {
     color: #131313;
-    font-size: 20pt;
+    font-size: 22pt;
+    font-weight: bold;
+}
+
+.t_points {
+    color: #131313;
+    font-size: 18pt;
+    font-weight: bold;
+}
+
+.t_vorbehalt {
+    color: #131313;
+    font-size: 12pt;
 }
 
 .t_cell_name {
     width: 100px;
     text-align: center;
-}
-
-.t_name_active {
-    color: #6e0606;
-    font-weight: 600;
 }
 
 .t {

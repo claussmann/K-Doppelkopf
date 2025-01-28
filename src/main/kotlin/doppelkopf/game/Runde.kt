@@ -103,7 +103,7 @@ class Runde (var startPos: Position = Position.OBEN, val modus: Spielmodus){
         return bestPos
     }
 
-    private fun gelegtVon(pos: Position): Karte? {
+    fun gelegtVon(pos: Position): Karte? {
         return when(pos) {
             Position.UNTEN -> unten
             Position.LINKS -> links

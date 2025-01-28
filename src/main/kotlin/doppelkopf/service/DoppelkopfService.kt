@@ -3,6 +3,8 @@ package doppelkopf.service
 import doppelkopf.game.*
 import doppelkopf.model.SpielerPrivate
 import doppelkopf.model.SpielerPublic
+import doppelkopf.model.UpdateRequest
+import doppelkopf.model.UpdateResponse
 import java.lang.RuntimeException
 import java.util.UUID
 
@@ -25,12 +27,28 @@ class DoppelkopfService {
         for (s in lobby.values) {
             if (s.pos == pos) return SpielerPublic(s)
         }
-        throw IllegalArgumentException("Spieler an dieser Position existiert nicht.")
+        throw SpielerNichtGefundenException("Spieler an dieser Position existiert nicht.")
     }
 
     fun getPrivateSpielerInfo(sessionToken: String): SpielerPrivate {
-        val s = lobby[sessionToken] ?: throw IllegalArgumentException("Token nicht korrekt.")
+        if (sessionToken.length > 50) throw FehlerhaftesTokenException("Token nicht korrekt.")
+        val s = lobby[sessionToken] ?: throw FehlerhaftesTokenException("Token nicht korrekt.")
         return SpielerPrivate(s, sessionToken)
+    }
+
+    fun getTableUpdate(sessionToken: String): UpdateResponse {
+        val spielerSelf = getPrivateSpielerInfo(sessionToken)
+        val spielerListe = lobby.values.map { SpielerPublic(it) }
+        return UpdateResponse(
+            spielerSelf,
+            game?.werIstDran() ?: Position.OBEN,
+            spielerListe,
+            game?.aktuellerSpielmodus(),
+            game?.gelegtVon(Position.LINKS),
+            game?.gelegtVon(Position.OBEN),
+            game?.gelegtVon(Position.RECHTS),
+            game?.gelegtVon(Position.UNTEN),
+        )
     }
 
     fun getCurrentTurnPlayer(): SpielerPublic {
@@ -58,14 +76,14 @@ class DoppelkopfService {
 
     private fun randomPosition(): Position {
         if (isFull()) {
-            throw RuntimeException("Spiel ist bereits voll.")
+            throw IllegalerZugException("Spiel ist bereits voll.")
         }
         var positions = listOf(Position.OBEN, Position.LINKS, Position.RECHTS, Position.UNTEN)
         for (s in lobby.values) {
             positions = positions.filter { s.pos != it }
         }
         if (positions.isEmpty()) {
-            throw RuntimeException("Spiel ist bereits voll.")
+            throw IllegalerZugException("Spiel ist bereits voll.")
         }
         return positions.random()
     }

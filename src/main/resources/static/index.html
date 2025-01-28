@@ -13,8 +13,9 @@
 <!-- Body -->
 <body>
     <div class="title_bar">
-        <img src="logo.png" alt="Logo" style="position: fixed; left: 5px; top: 2px" height="70px">
-        <span id="display_player_name"></span>
+        <img src="logo.png" alt="Logo" style="position: fixed; left: 5px; top: 5px" height="100">
+        <span id="display_player_name" style="position: fixed; left: 130px; top: 20px"></span>
+        <span id="display_player_party" style="position: fixed; right: 30px; top: 20px"></span>
     </div>
 
     <div class="center">
@@ -32,35 +33,67 @@
                 <tr>
                     <td></td>
                     <td></td>
-                    <td class="t_cell_name"><span id="player_top" class="t_name">--</span>&nbsp;&nbsp;&nbsp;<span id="points_top" class="t_name">--</span><br/><span id="vorbehalt_top" class="t_vorbehalt"></span></td>
+                    <td class="t_cell_name"><span id="player_top" class="t_name">--</span><br><span id="points_top" class="t_points">0</span><br/><span id="vorbehalt_top" class="t_vorbehalt"></span></td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td></td>
                     <td></td>
-                    <td class="t_cell_card"><button class="std_btn t_card" id="t_card_top" disabled>--</button></td>
+                    <td class="t_cell_card">
+                        <button class="std_btn t_card" id="t_card_top" disabled>
+                            <span id="t_card_top_KA" style="display: none; color: #6e0606">&#9830;</span>
+                            <span id="t_card_top_HE" style="display: none; color: #6e0606">&#9829;</span>
+                            <span id="t_card_top_PI" style="display: none">&#9824;</span>
+                            <span id="t_card_top_KR" style="display: none">&#9827;</span>
+                            <span id="t_card_top_val"></span>
+                        </button>
+                    </td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="t_cell_name"><span id="player_left" class="t_name">--</span>&nbsp;&nbsp;&nbsp;<span id="points_left" class="t_name">--</span><br/><span id="vorbehalt_left" class="t_vorbehalt"></span></td>
-                    <td class="t_cell_card"><button class="std_btn t_card" id="t_card_left" disabled>--</button></td>
+                    <td class="t_cell_name"><span id="player_left" class="t_name">--</span><br><span id="points_left" class="t_points">0</span><br/><span id="vorbehalt_left" class="t_vorbehalt"></span></td>
+                    <td class="t_cell_card">
+                        <button class="std_btn t_card" id="t_card_left" disabled>
+                            <span id="t_card_left_KA" style="display: none; color: #6e0606">&#9830;</span>
+                            <span id="t_card_left_HE" style="display: none; color: #6e0606">&#9829;</span>
+                            <span id="t_card_left_PI" style="display: none">&#9824;</span>
+                            <span id="t_card_left_KR" style="display: none">&#9827;</span>
+                            <span id="t_card_left_val"></span>
+                        </button>
+                    </td>
                     <td></td>
-                    <td class="t_cell_card"><button class="std_btn t_card" id="t_card_right" disabled>--</button></td>
-                    <td class="t_cell_name"><span id="player_right" class="t_name">--</span>&nbsp;&nbsp;&nbsp;<span id="points_right" class="t_name">--</span><br/><span id="vorbehalt_right" class="t_vorbehalt"></span></td>
+                    <td class="t_cell_card">
+                        <button class="std_btn t_card" id="t_card_right" disabled>
+                            <span id="t_card_right_KA" style="display: none; color: #6e0606">&#9830;</span>
+                            <span id="t_card_right_HE" style="display: none; color: #6e0606">&#9829;</span>
+                            <span id="t_card_right_PI" style="display: none">&#9824;</span>
+                            <span id="t_card_right_KR" style="display: none">&#9827;</span>
+                            <span id="t_card_right_val"></span>
+                        </button>
+                    </td>
+                    <td class="t_cell_name"><span id="player_right" class="t_name">--</span><br><span id="points_right" class="t_points">0</span><br/><span id="vorbehalt_right" class="t_vorbehalt"></span></td>
                 </tr>
                 <tr>
                     <td></td>
                     <td></td>
-                    <td class="t_cell_card"><button class="std_btn t_card" id="t_card_bottom" disabled>--</button></td>
+                    <td class="t_cell_card">
+                        <button class="std_btn t_card" id="t_card_bottom" disabled>
+                            <span id="t_card_bottom_KA" style="display: none; color: #6e0606">&#9830;</span>
+                            <span id="t_card_bottom_HE" style="display: none; color: #6e0606">&#9829;</span>
+                            <span id="t_card_bottom_PI" style="display: none">&#9824;</span>
+                            <span id="t_card_bottom_KR" style="display: none">&#9827;</span>
+                            <span id="t_card_bottom_val"></span>
+                        </button>
+                    </td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td></td>
                     <td></td>
-                    <td class="t_cell_name"><span id="player_bottom" class="t_name">--</span>&nbsp;&nbsp;&nbsp;<span id="points_bottom" class="t_name">--</span><br/><span id="vorbehalt_bottom" class="t_vorbehalt"></span></td>
+                    <td class="t_cell_name"><span id="player_bottom" class="t_name">--</span><br><span id="points_bottom" class="t_points">0</span><br/><span id="vorbehalt_bottom" class="t_vorbehalt"></span></td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -68,20 +101,104 @@
 
             <!-- Eigene Karten -->
             <div class="own_card_hand">
-                <button class="std_btn card" onclick="lay_card(0)" id="card_0">--</button>
-                <button class="std_btn card" onclick="lay_card(1)" id="card_1">--</button>
-                <button class="std_btn card" onclick="lay_card(2)" id="card_2">--</button>
-                <button class="std_btn card" onclick="lay_card(3)" id="card_3">--</button>
-                <button class="std_btn card" onclick="lay_card(4)" id="card_4">--</button>
-                <button class="std_btn card" onclick="lay_card(5)" id="card_5">--</button>
-                <br/>
-                <button class="std_btn card" onclick="lay_card(6)" id="card_6">--</button>
-                <button class="std_btn card" onclick="lay_card(7)" id="card_7">--</button>
-                <button class="std_btn card" onclick="lay_card(8)" id="card_8">--</button>
-                <button class="std_btn card" onclick="lay_card(9)" id="card_9">--</button>
-                <button class="std_btn card" onclick="lay_card(10)" id="card_10">--</button>
-                <button class="std_btn card" onclick="lay_card(11)" id="card_11">--</button>
+                <button class="std_btn card" onclick="layCard(0)" id="card_0">
+                    <span id="card_0_KA" style="display: none; color: #6e0606">&#9830;</span>
+                    <span id="card_0_HE" style="display: none; color: #6e0606">&#9829;</span>
+                    <span id="card_0_PI" style="display: none">&#9824;</span>
+                    <span id="card_0_KR" style="display: none">&#9827;</span>
+                    <span id="card_0_val"></span>
+                </button>
+                <button class="std_btn card" onclick="layCard(1)" id="card_1">
+                    <span id="card_1_KA" style="display: none; color: #6e0606">&#9830;</span>
+                    <span id="card_1_HE" style="display: none; color: #6e0606">&#9829;</span>
+                    <span id="card_1_PI" style="display: none">&#9824;</span>
+                    <span id="card_1_KR" style="display: none">&#9827;</span>
+                    <span id="card_1_val"></span>
+                </button>
+                <button class="std_btn card" onclick="layCard(2)" id="card_2">
+                    <span id="card_2_KA" style="display: none; color: #6e0606">&#9830;</span>
+                    <span id="card_2_HE" style="display: none; color: #6e0606">&#9829;</span>
+                    <span id="card_2_PI" style="display: none">&#9824;</span>
+                    <span id="card_2_KR" style="display: none">&#9827;</span>
+                    <span id="card_2_val"></span>
+                </button>
+                <button class="std_btn card" onclick="layCard(3)" id="card_3">
+                    <span id="card_3_KA" style="display: none; color: #6e0606">&#9830;</span>
+                    <span id="card_3_HE" style="display: none; color: #6e0606">&#9829;</span>
+                    <span id="card_3_PI" style="display: none">&#9824;</span>
+                    <span id="card_3_KR" style="display: none">&#9827;</span>
+                    <span id="card_3_val"></span>
+                </button>
+                <button class="std_btn card" onclick="layCard(4)" id="card_4">
+                    <span id="card_4_KA" style="display: none; color: #6e0606">&#9830;</span>
+                    <span id="card_4_HE" style="display: none; color: #6e0606">&#9829;</span>
+                    <span id="card_4_PI" style="display: none">&#9824;</span>
+                    <span id="card_4_KR" style="display: none">&#9827;</span>
+                    <span id="card_4_val"></span>
+                </button>
+                <button class="std_btn card" onclick="layCard(5)" id="card_5">
+                    <span id="card_5_KA" style="display: none; color: #6e0606">&#9830;</span>
+                    <span id="card_5_HE" style="display: none; color: #6e0606">&#9829;</span>
+                    <span id="card_5_PI" style="display: none">&#9824;</span>
+                    <span id="card_5_KR" style="display: none">&#9827;</span>
+                    <span id="card_5_val"></span>
+                </button>
+                <br>
+                <button class="std_btn card" onclick="layCard(6)" id="card_6">
+                    <span id="card_6_KA" style="display: none; color: #6e0606">&#9830;</span>
+                    <span id="card_6_HE" style="display: none; color: #6e0606">&#9829;</span>
+                    <span id="card_6_PI" style="display: none">&#9824;</span>
+                    <span id="card_6_KR" style="display: none">&#9827;</span>
+                    <span id="card_6_val"></span>
+                </button>
+                <button class="std_btn card" onclick="layCard(7)" id="card_7">
+                    <span id="card_7_KA" style="display: none; color: #6e0606">&#9830;</span>
+                    <span id="card_7_HE" style="display: none; color: #6e0606">&#9829;</span>
+                    <span id="card_7_PI" style="display: none">&#9824;</span>
+                    <span id="card_7_KR" style="display: none">&#9827;</span>
+                    <span id="card_7_val"></span>
+                </button>
+                <button class="std_btn card" onclick="layCard(8)" id="card_8">
+                    <span id="card_8_KA" style="display: none; color: #6e0606">&#9830;</span>
+                    <span id="card_8_HE" style="display: none; color: #6e0606">&#9829;</span>
+                    <span id="card_8_PI" style="display: none">&#9824;</span>
+                    <span id="card_8_KR" style="display: none">&#9827;</span>
+                    <span id="card_8_val"></span>
+                </button>
+                <button class="std_btn card" onclick="layCard(9)" id="card_9">
+                    <span id="card_9_KA" style="display: none; color: #6e0606">&#9830;</span>
+                    <span id="card_9_HE" style="display: none; color: #6e0606">&#9829;</span>
+                    <span id="card_9_PI" style="display: none">&#9824;</span>
+                    <span id="card_9_KR" style="display: none">&#9827;</span>
+                    <span id="card_9_val"></span>
+                </button>
+                <button class="std_btn card" onclick="layCard(10)" id="card_10">
+                    <span id="card_10_KA" style="display: none; color: #6e0606">&#9830;</span>
+                    <span id="card_10_HE" style="display: none; color: #6e0606">&#9829;</span>
+                    <span id="card_10_PI" style="display: none">&#9824;</span>
+                    <span id="card_10_KR" style="display: none">&#9827;</span>
+                    <span id="card_10_val"></span>
+                </button>
+                <button class="std_btn card" onclick="layCard(11)" id="card_11">
+                    <span id="card_11_KA" style="display: none; color: #6e0606">&#9830;</span>
+                    <span id="card_11_HE" style="display: none; color: #6e0606">&#9829;</span>
+                    <span id="card_11_PI" style="display: none">&#9824;</span>
+                    <span id="card_11_KR" style="display: none">&#9827;</span>
+                    <span id="card_11_val"></span>
+                </button>
             </div>
+        </div>
+    </div>
+
+    <!--Footer-->
+    <div class="footer_bar">
+        <div id="vorbehaltfield" style="display: none">
+            <label for="vor"></label>
+            <select id="vor" class="std_select">
+                <option value="NORMAL" selected="selected">Kein Vorbehalt</option>
+                <option value="SOLO">Solo</option>
+            </select>
+            <button class="std_btn" onclick="vorbehalt(vor.value)">Vorbehalt ansagen</button>
         </div>
     </div>
 </body>

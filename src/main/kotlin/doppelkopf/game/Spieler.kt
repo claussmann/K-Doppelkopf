@@ -2,9 +2,10 @@ package doppelkopf.game
 
 class Spieler(val name: String, val pos: Position) {
     var hand = ArrayList<Karte>()
-    val hasSchwein: Boolean = false;
-    var punkte: Int = 0;
+    val hasSchwein: Boolean = false
+    var punkte: Int = 0
     var partei: Partei = Partei.UNBEKANNT
+    var vorbehalt: Spielmodus? = null
 
     fun hasKarte(k: Karte): Boolean {
         return hand.contains(k);

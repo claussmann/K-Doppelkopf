@@ -1,7 +1,14 @@
 package doppelkopf
 
+import doppelkopf.game.IllegalerZugException
+import doppelkopf.game.Karte
 import doppelkopf.game.Position
+import doppelkopf.model.CardPutRequest
 import doppelkopf.model.JoinRequest
+import doppelkopf.model.UpdateRequest
+import doppelkopf.model.VorbehaltRequest
+import doppelkopf.service.FehlerhaftesTokenException
+import doppelkopf.service.SpielerNichtGefundenException
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
@@ -14,49 +21,47 @@ fun Application.configureRouting() {
         staticResources("/", "static") // Serve index.html
 
         post("/join") {
-            call.respond(service.join(call.receive<JoinRequest>().spielername))
-        }
-        get("/player/links") {
             try {
-                call.respond(service.getPublicSpielerInfo(Position.LINKS))
-            } catch (e: IllegalArgumentException) {
-                call.respond(HttpStatusCode.NotFound)
+                call.respond(service.join(call.receive<JoinRequest>().spielername))
+            } catch (e: IllegalerZugException) {
+                call.respond(HttpStatusCode.BadRequest, e.message ?: "Unbekannter Fehler")
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
             }
         }
-        get("/player/rechts") {
+
+        post("/putcard") {
             try {
-                call.respond(service.getPublicSpielerInfo(Position.RECHTS))
-            } catch (e: IllegalArgumentException) {
-                call.respond(HttpStatusCode.NotFound)
+                val body = call.receive<CardPutRequest>()
+                call.respond(service.karteLegen(body.token, body.card))
+            } catch (e: FehlerhaftesTokenException) {
+                call.respond(HttpStatusCode.Unauthorized)
+            } catch (e: IllegalerZugException) {
+                call.respond(HttpStatusCode.BadRequest, e.message ?: "Unbekannter Fehler")
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
             }
         }
-        get("/player/oben") {
+
+        post("/putvorbehalt") {
             try {
-                call.respond(service.getPublicSpielerInfo(Position.OBEN))
-            } catch (e: IllegalArgumentException) {
-                call.respond(HttpStatusCode.NotFound)
+                val body = call.receive<VorbehaltRequest>()
+                call.respond(service.vorbehaltAnsagen(body.token, body.vorbehalt))
+            } catch (e: FehlerhaftesTokenException) {
+                call.respond(HttpStatusCode.Unauthorized)
+            } catch (e: IllegalerZugException) {
+                call.respond(HttpStatusCode.BadRequest, e.message ?: "Unbekannter Fehler")
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
+                println(e.message)
             }
         }
-        get("/player/unten") {
+
+        post("/update") {
             try {
-                call.respond(service.getPublicSpielerInfo(Position.UNTEN))
-            } catch (e: IllegalArgumentException) {
-                call.respond(HttpStatusCode.NotFound)
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError)
-            }
-        }
-        get("/player/private/{sessionToken}") {
-            val token = call.parameters["sessionToken"] ?: call.respond(HttpStatusCode.BadRequest)
-            try {
-                call.respond(service.getPrivateSpielerInfo(token.toString()))
-            } catch (e: IllegalArgumentException) {
+                val body = call.receive<UpdateRequest>()
+                call.respond(service.getTableUpdate(body.token))
+            } catch (e: FehlerhaftesTokenException) {
                 call.respond(HttpStatusCode.Unauthorized)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
