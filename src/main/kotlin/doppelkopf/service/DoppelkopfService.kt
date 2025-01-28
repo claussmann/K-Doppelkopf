@@ -38,25 +38,11 @@ class DoppelkopfService {
 
     fun getTableUpdate(sessionToken: String): UpdateResponse {
         val spielerSelf = getPrivateSpielerInfo(sessionToken)
-        var spielerLinks: SpielerPublic? = null
-        var spielerOben: SpielerPublic? = null
-        var spielerRechts: SpielerPublic? = null
-        var spielerUnten: SpielerPublic? = null
-        for (s in lobby.values) {
-            when (s.pos) {
-                Position.LINKS -> spielerLinks = SpielerPublic(s)
-                Position.OBEN -> spielerOben = SpielerPublic(s)
-                Position.RECHTS -> spielerRechts = SpielerPublic(s)
-                Position.UNTEN -> spielerUnten = SpielerPublic(s)
-            }
-        }
+        val spielerListe = lobby.values.map { SpielerPublic(it) }
         return UpdateResponse(
             spielerSelf,
             game?.werIstDran() ?: Position.OBEN,
-            spielerLinks,
-            spielerOben,
-            spielerRechts,
-            spielerUnten,
+            spielerListe,
             game?.aktuellerSpielmodus(),
             game?.gelegtVon(Position.LINKS),
             game?.gelegtVon(Position.OBEN),
