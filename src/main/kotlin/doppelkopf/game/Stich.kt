@@ -7,6 +7,10 @@ class Stich(val stichnummer: Int, val starter: Position, val spielmodus: Spielmo
     var unten: Karte? = null
     var gewinner: Position? = null
 
+    fun aufspiel(): Karte? {
+        return gelegtVon(starter)
+    }
+
     fun istKomplett(): Boolean {
         return links != null && oben != null && rechts != null && unten != null
     }

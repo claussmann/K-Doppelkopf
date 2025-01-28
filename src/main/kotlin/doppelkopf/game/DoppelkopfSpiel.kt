@@ -27,10 +27,13 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
     fun karteLegen(karte: Karte, pos: Position) {
         val s = spieler.first { it.pos == pos }
         val r = currentRunde ?: throw IllegalerZugException("Es kann noch keine Karte gelegt werden.")
-        if (s.hasKarte(karte)) {
-            r.karteGelegt(karte, pos)
-            s.legeKarte(karte)
+        if (!s.hasKarte(karte)) throw IllegalerZugException("Diese Karte hat der Spieler nicht.")
+        val aufspiel = r.aktuellerStich.aufspiel()
+        if (aufspiel != null) {
+            if (!s.korrektBedient(aufspiel, karte, aktuellerSpielmodus()!!)) throw IllegalerZugException("Falsch bedient.")
         }
+        r.karteGelegt(karte, pos)
+        s.legeKarte(karte)
         if (r.stichKomplett()) {
             r.stichGewinnerErmitteln()
             ermittleParteien() // Bei Hochzeit ergeben sich die Parteien möglicherweise erst jetzt.
