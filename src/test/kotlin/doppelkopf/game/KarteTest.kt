@@ -24,4 +24,17 @@ class KarteTest {
         // Gleiche Karte kann nicht gestochen werden
         assertFalse(Karte.KA_10.sticht(Karte.KA_10, false, false, Karte.HE_A, Spielmodus.NORMAL))
     }
+
+    @Test
+    fun testIstTrumpf() {
+        assertTrue(Karte.KA_K.istTrumpf(Spielmodus.NORMAL))
+        assertTrue(Karte.KR_D.istTrumpf(Spielmodus.NORMAL))
+        assertTrue(Karte.HE_10.istTrumpf(Spielmodus.NORMAL))
+        assertFalse(Karte.HE_K.istTrumpf(Spielmodus.NORMAL))
+
+        assertTrue(Karte.KR_D.istTrumpf(Spielmodus.SOLO_DAME))
+        assertFalse(Karte.KR_B.istTrumpf(Spielmodus.SOLO_DAME))
+        assertFalse(Karte.HE_B.istTrumpf(Spielmodus.SOLO_REINES_KREUZ))
+        assertTrue(Karte.KR_10.istTrumpf(Spielmodus.SOLO_REINES_KREUZ))
+    }
 }

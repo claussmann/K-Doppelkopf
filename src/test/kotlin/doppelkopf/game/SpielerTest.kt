@@ -31,4 +31,13 @@ class SpielerTest {
         spieler.neueHand(arrayListOf(Karte.HE_K, Karte.HE_10))
         assertFails { spieler.neueHand(arrayListOf(Karte.KA_B)) }
     }
+
+    @Test
+    fun testKorrektBedient() {
+        val spieler = Spieler("Peter", Position.LINKS)
+        spieler.neueHand(arrayListOf(Karte.HE_10, Karte.PI_D, Karte.KA_A, Karte.KR_A, Karte.PI_10, Karte.PI_9))
+        assertTrue(spieler.korrektBedient(Karte.KA_9, Karte.PI_D, Spielmodus.NORMAL))
+        assertFalse(spieler.korrektBedient(Karte.PI_10, Karte.PI_D, Spielmodus.NORMAL))
+        assertTrue(spieler.korrektBedient(Karte.KR_K, Karte.KR_A, Spielmodus.NORMAL))
+    }
 }
