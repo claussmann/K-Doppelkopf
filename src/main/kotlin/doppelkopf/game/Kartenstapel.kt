@@ -1,5 +1,6 @@
 package doppelkopf.game
 
+import java.security.SecureRandom
 import kotlin.random.Random
 
 class Kartenstapel {
@@ -15,6 +16,7 @@ class Kartenstapel {
         Karte.KR_9, Karte.KR_10, Karte.KR_B, Karte.KR_D, Karte.KR_K, Karte.KR_A
     )
     private var currentCopy: ArrayList<Karte> = arrayListOf()
+    private val rand = SecureRandom()
 
     private fun initialisieren() {
         stapel.shuffle()
@@ -32,7 +34,7 @@ class Kartenstapel {
         val ret = ArrayList<Karte>()
         if (currentCopy.size < anzahl) throw IllegalArgumentException("Stapel enthält nicht genug Karten.")
         for (i in 1..anzahl) {
-            ret.add(currentCopy.removeAt(Random.nextInt(0, currentCopy.size)))
+            ret.add(currentCopy.removeAt(rand.nextInt(0, currentCopy.size)))
         }
         return ret
     }
