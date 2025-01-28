@@ -1,9 +1,7 @@
 let SELF = null;
 let PLAYERS = [];
-let CARD_LEFT = null;
-let CARD_RIGHT = null;
-let CARD_BOTTOM = null;
-let CARD_TOP = null;
+let CURRENT_STICH = null;
+let PREV_STICH = null;
 let CURRENT_TURN = "LINKS"
 const DEBUG = true;
 const PERIODIC_CALL_INTERVAL = 5000
@@ -101,10 +99,8 @@ async function refresh() {
     console.log("Refreshing...");
     let resp = await api_post_body("/update", {"token": SELF.sessionToken});
     PLAYERS = resp.spielerListe;
-    CARD_LEFT = resp.gelegtLinks;
-    CARD_TOP = resp.gelegtOben;
-    CARD_RIGHT = resp.gelegtRechts;
-    CARD_BOTTOM = resp.gelegtUnten;
+    CURRENT_STICH = resp.aktuellerStich;
+    PREV_STICH = resp.letzterStich;
     resp.playerself.hand.sort(cardOrderCompare);
     SELF = resp.playerself
     CURRENT_TURN = resp.currentTurn
@@ -152,10 +148,28 @@ function displayParty() {
 }
 
 function displayTableCards() {
-    if (CARD_LEFT != null) displayCard("t_card_left", CARD_LEFT); else displayCard("t_card_left", "BLANC");
-    if (CARD_TOP != null) displayCard("t_card_top", CARD_TOP); else displayCard("t_card_top", "BLANC");
-    if (CARD_RIGHT != null) displayCard("t_card_right", CARD_RIGHT); else displayCard("t_card_right", "BLANC");
-    if (CARD_BOTTOM != null) displayCard("t_card_bottom", CARD_BOTTOM); else displayCard("t_card_bottom", "BLANC");
+    console.log(CURRENT_STICH)
+    console.log(PREV_STICH)
+    let L = null;
+    let R = null;
+    let B = null;
+    let T = null;
+    if (CURRENT_STICH != null) {
+        L = CURRENT_STICH.links;
+        R = CURRENT_STICH.rechts;
+        B = CURRENT_STICH.unten;
+        T = CURRENT_STICH.oben;
+        if (PREV_STICH != null && CURRENT_STICH.links == null && CURRENT_STICH.rechts == null && CURRENT_STICH.oben == null && CURRENT_STICH.unten == null){
+            L = PREV_STICH.links;
+            R = PREV_STICH.rechts;
+            B = PREV_STICH.unten;
+            T = PREV_STICH.oben;
+        }
+    }
+    if (L != null) displayCard("t_card_left", L); else displayCard("t_card_left", "BLANC");
+    if (T != null) displayCard("t_card_top", T); else displayCard("t_card_top", "BLANC");
+    if (R != null) displayCard("t_card_right", R); else displayCard("t_card_right", "BLANC");
+    if (B != null) displayCard("t_card_bottom", B); else displayCard("t_card_bottom", "BLANC");
 }
 
 function displayHand() {
