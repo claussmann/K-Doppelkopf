@@ -76,8 +76,12 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
         return spielerAnPos(pos).vorbehalt
     }
 
-    fun gelegtVon(pos: Position): Karte? {
-        return currentRunde?.gelegtVon(pos)
+    fun aktuellerStich(): Stich? {
+        return currentRunde?.aktuellerStich
+    }
+
+    fun letzterStich(): Stich? {
+        return currentRunde?.letzterStich
     }
 
     fun aktuellerSpielmodus(): Spielmodus? {

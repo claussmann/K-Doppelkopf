@@ -44,10 +44,8 @@ class DoppelkopfService {
             game?.werIstDran() ?: Position.OBEN,
             spielerListe,
             game?.aktuellerSpielmodus(),
-            game?.gelegtVon(Position.LINKS),
-            game?.gelegtVon(Position.OBEN),
-            game?.gelegtVon(Position.RECHTS),
-            game?.gelegtVon(Position.UNTEN),
+            game?.aktuellerStich(),
+            game?.letzterStich()
         )
     }
 
