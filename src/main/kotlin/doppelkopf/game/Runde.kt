@@ -27,7 +27,7 @@ class Runde (val startPos: Position = Position.OBEN, val modus: Spielmodus){
      * Prüft, ob der Stich vollständig ist (4 Karten liegen).
      */
     fun stichKomplett(): Boolean {
-        return aktuellerStich.istKomplett() ?: return false
+        return aktuellerStich.istKomplett()
     }
 
     /**
@@ -56,7 +56,7 @@ class Runde (val startPos: Position = Position.OBEN, val modus: Spielmodus){
     fun karteGelegt(k: Karte, pos: Position) {
         if (rundeKomplett()) throw IllegalerZugException("Diese Runde ist bereits abgeschlossen.")
         if (pos != amZug) throw IllegalerZugException("Spieler ist nicht an der Reihe")
-        aktuellerStich?.karteHinzu(k, pos) ?: throw IllegalerZugException("Diese Runde ist bereits abgeschlossen.")
+        aktuellerStich.karteHinzu(k, pos)
         amZug = pos.next()
     }
 
