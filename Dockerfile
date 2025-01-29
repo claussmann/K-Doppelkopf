@@ -1,5 +1,5 @@
 FROM debian as buildcontainer
-RUN apt update && sudo apt install openjdk-17-jdk maven
+RUN apt update && apt install openjdk-17-jdk maven
 RUN mkdir /compile
 COPY . /compile
 WORKDIR /compile
