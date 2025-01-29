@@ -11,6 +11,6 @@ FROM debian:bookworm-slim
 RUN mkdir /app
 COPY --from=buildcontainer /compile/target/* /app
 WORKDIR /app
-RUN ls
 RUN apt update && apt install -y openjdk-17-jre
-RUN java -jar K-Doppelkopf-0.0.1.jar
+RUN ls
+ENTRYPOINT java -jar K-Doppelkopf-0.1-alpha.jar
