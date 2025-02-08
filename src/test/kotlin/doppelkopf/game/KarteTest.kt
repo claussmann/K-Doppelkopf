@@ -53,6 +53,13 @@ class KarteTest {
     }
 
     @Test
+    fun testStichtFleischlos() {
+        assertTrue(Karte.HE_K.sticht(Karte.HE_9, false, Spielmodus.FLEISCHLOSER))
+        assertFalse(Karte.KR_10.sticht(Karte.HE_9, false, Spielmodus.FLEISCHLOSER))
+        assertFalse(Karte.KR_B.sticht(Karte.PI_A, false, Spielmodus.FLEISCHLOSER))
+    }
+
+    @Test
     fun testIstTrumpf() {
         assertTrue(Karte.KA_K.istTrumpf(Spielmodus.NORMAL))
         assertTrue(Karte.KR_D.istTrumpf(Spielmodus.NORMAL))

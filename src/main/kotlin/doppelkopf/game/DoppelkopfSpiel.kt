@@ -116,9 +116,9 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
             Spielmodus.SOLO_KARO, Spielmodus.SOLO_HERZ,
             Spielmodus.SOLO_PIK, Spielmodus.SOLO_KREUZ,
             Spielmodus.SOLO_DAME, Spielmodus.SOLO_BUBE,
-            Spielmodus.SOLO -> {
+            Spielmodus.SOLO, Spielmodus.FLEISCHLOSER -> {
                 TODO()
-                // Bei Solo muss man sich direkt nach dem vorbehalt ansagen merken, wer das solo spielt.
+                // Bei Solo muss man sich direkt nach dem Vorbehalt ansagen merken, wer das solo spielt.
             }
 
             null -> TODO()

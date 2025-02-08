@@ -153,6 +153,7 @@ enum class Karte {
 
             Spielmodus.SOLO_DAME -> this.bild() == Bild.DAME
             Spielmodus.SOLO_BUBE -> this.bild() == Bild.BUBE
+            Spielmodus.FLEISCHLOSER -> false
         }
     }
 
