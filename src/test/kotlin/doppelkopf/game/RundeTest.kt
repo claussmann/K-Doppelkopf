@@ -56,6 +56,16 @@ class RundeTest {
     }
 
     @Test
+    fun testGewinnerbestimmung4() {
+        val r = Runde(Position.OBEN, Spielmodus.NORMAL)
+        r.karteGelegt(Karte.KR_10, Position.OBEN)
+        r.karteGelegt(Karte.HE_9, Position.RECHTS)
+        r.karteGelegt(Karte.KR_A, Position.UNTEN)
+        r.karteGelegt(Karte.HE_K, Position.LINKS)
+        assertEquals(Position.UNTEN, r.stichGewinnerErmitteln())
+    }
+
+    @Test
     fun testPunkteZahelen() {
         val r = Runde(Position.OBEN, Spielmodus.NORMAL)
         r.karteGelegt(Karte.KR_10, Position.OBEN)

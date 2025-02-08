@@ -1,7 +1,6 @@
 package doppelkopf.game
 
 import java.security.SecureRandom
-import kotlin.random.Random
 
 class Kartenstapel {
     private val stapel: Array<Karte> = arrayOf(
