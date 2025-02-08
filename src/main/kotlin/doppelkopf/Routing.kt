@@ -20,6 +20,10 @@ fun Application.configureRouting() {
     routing {
         staticResources("/", "static") // Serve index.html
 
+        get("/health") {
+            call.respondText { "OK" }
+        }
+
         post("/join") {
             try {
                 call.respond(service.join(call.receive<JoinRequest>().spielername))
