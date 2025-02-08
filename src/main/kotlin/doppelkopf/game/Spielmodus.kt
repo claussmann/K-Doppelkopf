@@ -11,6 +11,14 @@ enum class Spielmodus {
     }
 
     fun isPflichtsolo(): Boolean {
+        // TODO
+        return when(this) {
+            NORMAL, HOCHZEIT, ARMUT -> false
+            else -> true
+        }
+    }
+
+    fun isSolo(): Boolean {
         return when(this) {
             NORMAL, HOCHZEIT, ARMUT -> false
             else -> true

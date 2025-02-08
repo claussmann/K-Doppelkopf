@@ -62,7 +62,13 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
             }
             val starter = if (bestVorbehalt.isPflichtsolo()) bestPos else geber.next()
             currentRunde = Runde(starter, bestVorbehalt)
-            ermittleParteien()
+            if (bestVorbehalt.isSolo()) {
+                for (s in spieler) {
+                    if (s.pos == bestPos) s.partei = Partei.RE else s.partei = Partei.KONTRA
+                }
+            } else {
+                ermittleParteien()
+            }
         }
     }
 
@@ -117,11 +123,11 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
             Spielmodus.SOLO_PIK, Spielmodus.SOLO_KREUZ,
             Spielmodus.SOLO_DAME, Spielmodus.SOLO_BUBE,
             Spielmodus.SOLO, Spielmodus.FLEISCHLOSER -> {
-                TODO()
-                // Bei Solo muss man sich direkt nach dem Vorbehalt ansagen merken, wer das solo spielt.
+                // Das sollte nie erreicht werden.
+                RuntimeException("Bei Solos muss die Partei bei Ansage bereits ermittelt worden sein.")
             }
 
-            null -> TODO()
+            null -> RuntimeException("Parteien können nicht auf Spielmodus null ermittelt werden.")
         }
     }
 
