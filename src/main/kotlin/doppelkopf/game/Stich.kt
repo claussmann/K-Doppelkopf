@@ -32,13 +32,12 @@ class Stich(val stichnummer: Int, val starter: Position, val spielmodus: Spielmo
         if (!istKomplett()) throw IllegalerZugException("Noch nicht alle haben gelegt")
         var bestPos = starter
         var bestCard = gelegtVon(bestPos)!!
-        val aufspiel = bestCard
         var currentPos = bestPos
         var currentCard: Karte
         for (i in 1..3) {
             currentPos = currentPos.next()
             currentCard = gelegtVon(currentPos)!!
-            if (currentCard.sticht(bestCard, stichnummer == 12, false, aufspiel, spielmodus)) {
+            if (currentCard.sticht(bestCard, stichnummer == 12, spielmodus)) {
                 bestPos = currentPos
                 bestCard = currentCard
             }
