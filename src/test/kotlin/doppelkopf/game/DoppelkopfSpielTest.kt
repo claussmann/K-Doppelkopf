@@ -49,6 +49,7 @@ class DoppelkopfSpielTest {
         g.vorbehaltAnsagen(Spielmodus.NORMAL, Position.RECHTS)
         g.vorbehaltAnsagen(Spielmodus.NORMAL, Position.UNTEN)
         g.vorbehaltAnsagen(Spielmodus.NORMAL, Position.LINKS)
+        assertEquals(Spielmodus.NORMAL, g.aktuellerSpielmodus())
         assertEquals(Position.OBEN, g.werIstDran())
         assertEquals(Partei.RE, peter.partei)
         assertEquals(Partei.KONTRA, jan.partei)
