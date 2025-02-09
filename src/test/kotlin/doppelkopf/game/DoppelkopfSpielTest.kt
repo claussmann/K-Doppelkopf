@@ -150,5 +150,13 @@ class DoppelkopfSpielTest {
         assertEquals(3, jan.punkte)
         assertEquals(-3, fred.punkte)
         assertEquals(3, ann.punkte)
+
+        // Es sollte neu gegeben werden
+        assertEquals(12, peter.hand.size)
+        assertEquals(12, jan.hand.size)
+        assertEquals(12, fred.hand.size)
+        assertEquals(12, ann.hand.size)
+        assertNull(peter.vorbehalt)
+        assertEquals(Partei.UNBEKANNT, peter.partei)
     }
 }

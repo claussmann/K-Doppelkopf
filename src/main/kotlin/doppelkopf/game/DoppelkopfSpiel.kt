@@ -17,6 +17,7 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
     }
 
     private fun neuGeben() {
+        currentRunde = null
         for (s in spieler) {
             s.neueHand(karten.zieheKarten())
             s.partei = Partei.UNBEKANNT
@@ -164,6 +165,6 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
                 gegenDieAlten
             )
         )
-        currentRunde = null
+        neuGeben()
     }
 }
