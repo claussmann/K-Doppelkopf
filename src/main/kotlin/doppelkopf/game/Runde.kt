@@ -34,7 +34,15 @@ class Runde (val startPos: Position = Position.OBEN, val modus: Spielmodus){
      * Prüft, ob die Runde vollständig ist (alle Karten gelegt, bzw. 12 Stiche).
      */
     fun rundeKomplett(): Boolean {
-        return aktuellerStich.stichnummer > 12
+        return stichnummer() > 12
+    }
+
+    /**
+     * Gibt die aktuelle Stichnummer aus. Es ist immer die nummer des aktuellen unvollständigen stichs.
+     * Das heißt, wenn 4 Karten gelegt wurden ist die Stichnummer schon auf 2 gesprungen.
+     */
+    fun stichnummer(): Int {
+        return aktuellerStich.stichnummer
     }
 
     /**
@@ -73,7 +81,7 @@ class Runde (val startPos: Position = Position.OBEN, val modus: Spielmodus){
         }
         amZug = bestPos
         letzterStich = aktuellerStich
-        aktuellerStich = Stich(aktuellerStich.stichnummer + 1, amZug, modus)
+        aktuellerStich = Stich(stichnummer() + 1, amZug, modus)
         return bestPos
     }
 }
