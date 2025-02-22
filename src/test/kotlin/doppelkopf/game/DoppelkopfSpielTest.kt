@@ -150,5 +150,144 @@ class DoppelkopfSpielTest {
         assertEquals(3, jan.punkte)
         assertEquals(-3, fred.punkte)
         assertEquals(3, ann.punkte)
+
+        // Es sollte neu gegeben werden
+        assertEquals(12, peter.hand.size)
+        assertEquals(12, jan.hand.size)
+        assertEquals(12, fred.hand.size)
+        assertEquals(12, ann.hand.size)
+        assertNull(peter.vorbehalt)
+        assertEquals(Partei.UNBEKANNT, peter.partei)
+    }
+
+    @Test
+    fun testAnsageUndParteienKorrektNormalGame() {
+        val peter = Spieler("Peter", Position.OBEN)
+        val jan = Spieler("Jan", Position.RECHTS)
+        val fred = Spieler("Fred", Position.UNTEN)
+        val ann = Spieler("Ann", Position.LINKS)
+        val g = DoppelkopfSpiel(arrayOf(peter, jan, fred, ann))
+
+        peter.neueHand(arrayListOf(
+            Karte.HE_10, Karte.KR_D, Karte.HE_D, Karte.HE_D, Karte.PI_B, Karte.KA_10,
+            Karte.KA_9, Karte.KR_10, Karte.KR_9, Karte.HE_K, Karte.PI_A, Karte.PI_K), force = true)
+        jan.neueHand(arrayListOf(
+            Karte.PI_D, Karte.KR_B, Karte.PI_B, Karte.KA_A, Karte.KA_9, Karte.PI_A,
+            Karte.PI_K, Karte.KR_A, Karte.KR_10, Karte.HE_A, Karte.HE_9, Karte.HE_9), force = true)
+        fred.neueHand(arrayListOf(
+            Karte.KR_D, Karte.KA_D, Karte.KA_D, Karte.KR_B, Karte.HE_B, Karte.KR_K,
+            Karte.KR_K, Karte.KR_9, Karte.PI_10, Karte.PI_9, Karte.HE_A, Karte.HE_K), force = true)
+        ann.neueHand(arrayListOf(
+            Karte.HE_10, Karte.PI_D, Karte.HE_B, Karte.KA_B, Karte.KA_B, Karte.KA_A,
+            Karte.KA_10, Karte.KA_K, Karte.KA_K, Karte.KR_A, Karte.PI_10, Karte.PI_9), force = true)
+
+        g.vorbehaltAnsagen(Spielmodus.NORMAL, Position.OBEN)
+        g.vorbehaltAnsagen(Spielmodus.NORMAL, Position.RECHTS)
+        g.vorbehaltAnsagen(Spielmodus.NORMAL, Position.UNTEN)
+        g.vorbehaltAnsagen(Spielmodus.NORMAL, Position.LINKS)
+
+        assertEquals(Spielmodus.NORMAL, g.aktuellerSpielmodus())
+        assertEquals(Partei.RE, peter.partei)
+        assertEquals(Partei.KONTRA, jan.partei)
+        assertEquals(Partei.RE, fred.partei)
+        assertEquals(Partei.KONTRA, ann.partei)
+    }
+
+    @Test
+    fun testAnsageUndParteienKorrektSolo() {
+        val peter = Spieler("Peter", Position.OBEN)
+        val jan = Spieler("Jan", Position.RECHTS)
+        val fred = Spieler("Fred", Position.UNTEN)
+        val ann = Spieler("Ann", Position.LINKS)
+        val g = DoppelkopfSpiel(arrayOf(peter, jan, fred, ann))
+
+        g.vorbehaltAnsagen(Spielmodus.NORMAL, Position.OBEN)
+        g.vorbehaltAnsagen(Spielmodus.SOLO_BUBE, Position.RECHTS)
+        g.vorbehaltAnsagen(Spielmodus.NORMAL, Position.UNTEN)
+        g.vorbehaltAnsagen(Spielmodus.NORMAL, Position.LINKS)
+
+        assertEquals(Spielmodus.SOLO_BUBE, g.aktuellerSpielmodus())
+        assertEquals(Partei.KONTRA, peter.partei)
+        assertEquals(Partei.RE, jan.partei)
+        assertEquals(Partei.KONTRA, fred.partei)
+        assertEquals(Partei.KONTRA, ann.partei)
+    }
+
+    @Test
+    fun testAnsageUndParteienKorrektHochzeit() {
+        val peter = Spieler("Peter", Position.OBEN)
+        val jan = Spieler("Jan", Position.RECHTS)
+        val fred = Spieler("Fred", Position.UNTEN)
+        val ann = Spieler("Ann", Position.LINKS)
+        val g = DoppelkopfSpiel(arrayOf(peter, jan, fred, ann))
+
+        peter.neueHand(arrayListOf(
+            Karte.HE_10, Karte.KR_D, Karte.KR_D, Karte.HE_D, Karte.PI_B, Karte.KA_10,
+            Karte.KA_9, Karte.KR_10, Karte.KR_9, Karte.HE_K, Karte.PI_A, Karte.PI_K), force = true)
+        jan.neueHand(arrayListOf(
+            Karte.PI_D, Karte.KR_B, Karte.PI_B, Karte.KA_A, Karte.KA_9, Karte.PI_A,
+            Karte.PI_K, Karte.KR_A, Karte.KR_10, Karte.HE_A, Karte.HE_9, Karte.HE_9), force = true)
+        fred.neueHand(arrayListOf(
+            Karte.HE_D, Karte.KA_D, Karte.KA_D, Karte.KR_B, Karte.HE_B, Karte.KR_K,
+            Karte.KR_K, Karte.KR_9, Karte.PI_10, Karte.PI_9, Karte.HE_A, Karte.HE_K), force = true)
+        ann.neueHand(arrayListOf(
+            Karte.HE_10, Karte.PI_D, Karte.HE_B, Karte.KA_B, Karte.KA_B, Karte.KA_A,
+            Karte.KA_10, Karte.KA_K, Karte.KA_K, Karte.KR_A, Karte.PI_10, Karte.PI_9), force = true)
+
+        g.vorbehaltAnsagen(Spielmodus.HOCHZEIT, Position.OBEN)
+        g.vorbehaltAnsagen(Spielmodus.NORMAL, Position.RECHTS)
+        g.vorbehaltAnsagen(Spielmodus.NORMAL, Position.UNTEN)
+        g.vorbehaltAnsagen(Spielmodus.NORMAL, Position.LINKS)
+
+        assertEquals(Spielmodus.HOCHZEIT, g.aktuellerSpielmodus())
+        assertEquals(Partei.RE, peter.partei)
+        assertEquals(Partei.UNBEKANNT, jan.partei)
+        assertEquals(Partei.UNBEKANNT, fred.partei)
+        assertEquals(Partei.UNBEKANNT, ann.partei)
+
+        // Runde 1 geht an Hochzeit selbst
+        g.karteLegen(Karte.PI_A, Position.OBEN)
+        g.karteLegen(Karte.PI_K, Position.RECHTS)
+        g.karteLegen(Karte.PI_9, Position.UNTEN)
+        g.karteLegen(Karte.PI_9, Position.LINKS)
+        assertEquals(Partei.RE, peter.partei)
+        assertEquals(Partei.UNBEKANNT, jan.partei)
+        assertEquals(Partei.UNBEKANNT, fred.partei)
+        assertEquals(Partei.UNBEKANNT, ann.partei)
+
+        // Runde 2 wird abgestochen
+        g.karteLegen(Karte.KR_10, Position.OBEN)
+        g.karteLegen(Karte.KR_A, Position.RECHTS)
+        g.karteLegen(Karte.KR_9, Position.UNTEN)
+        g.karteLegen(Karte.KR_A, Position.LINKS)
+        assertEquals(Partei.RE, peter.partei)
+        assertEquals(Partei.RE, jan.partei)
+        assertEquals(Partei.KONTRA, fred.partei)
+        assertEquals(Partei.KONTRA, ann.partei)
+    }
+
+    @Test
+    fun testAnsageHochzeitUnmoeglich() {
+        val peter = Spieler("Peter", Position.OBEN)
+        val jan = Spieler("Jan", Position.RECHTS)
+        val fred = Spieler("Fred", Position.UNTEN)
+        val ann = Spieler("Ann", Position.LINKS)
+        val g = DoppelkopfSpiel(arrayOf(peter, jan, fred, ann))
+
+        peter.neueHand(arrayListOf(
+            Karte.HE_10, Karte.KR_D, Karte.PI_D, Karte.HE_D, Karte.PI_B, Karte.KA_10,
+            Karte.KA_9, Karte.KR_10, Karte.KR_9, Karte.HE_K, Karte.PI_A, Karte.PI_K), force = true)
+        jan.neueHand(arrayListOf(
+            Karte.KR_D, Karte.KR_B, Karte.PI_B, Karte.KA_A, Karte.KA_9, Karte.PI_A,
+            Karte.PI_K, Karte.KR_A, Karte.KR_10, Karte.HE_A, Karte.HE_9, Karte.HE_9), force = true)
+        fred.neueHand(arrayListOf(
+            Karte.HE_D, Karte.KA_D, Karte.KA_D, Karte.KR_B, Karte.HE_B, Karte.KR_K,
+            Karte.KR_K, Karte.KR_9, Karte.PI_10, Karte.PI_9, Karte.HE_A, Karte.HE_K), force = true)
+        ann.neueHand(arrayListOf(
+            Karte.HE_10, Karte.PI_D, Karte.HE_B, Karte.KA_B, Karte.KA_B, Karte.KA_A,
+            Karte.KA_10, Karte.KA_K, Karte.KA_K, Karte.KR_A, Karte.PI_10, Karte.PI_9), force = true)
+
+        // Spieler hat nur eine Kreuz Dame
+        assertFails { g.vorbehaltAnsagen(Spielmodus.HOCHZEIT, Position.OBEN) }
     }
 }

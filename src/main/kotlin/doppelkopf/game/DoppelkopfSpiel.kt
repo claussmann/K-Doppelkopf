@@ -17,6 +17,7 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
     }
 
     private fun neuGeben() {
+        currentRunde = null
         for (s in spieler) {
             s.neueHand(karten.zieheKarten())
             s.partei = Partei.UNBEKANNT
@@ -44,6 +45,7 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
     fun vorbehaltAnsagen(vorbehalt: Spielmodus, pos: Position) {
         if (currentRunde != null) throw IllegalerZugException("Vorbehalte können gerade nicht angesagt werden.")
         if (ansager != pos || spielerAnPos(pos).vorbehalt != null) throw IllegalerZugException("Spieler ist nicht dran mit ansagen.")
+        if (!spielerAnPos(pos).korrektVorbehalt(vorbehalt)) throw IllegalerZugException("Spieler kann diesen Vorbehalt nicht ansagen.")
         spielerAnPos(pos).vorbehalt = vorbehalt
         ansager = ansager.next()
         if (vorbehaltVon(Position.LINKS) != null && vorbehaltVon(Position.RECHTS) != null
@@ -65,6 +67,10 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
             if (bestVorbehalt.isSolo()) {
                 for (s in spieler) {
                     if (s.pos == bestPos) s.partei = Partei.RE else s.partei = Partei.KONTRA
+                }
+            } else if (bestVorbehalt == Spielmodus.HOCHZEIT){
+                for (s in spieler) {
+                    if (s.pos == bestPos) s.partei = Partei.RE
                 }
             } else {
                 ermittleParteien()
@@ -105,17 +111,37 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
     }
 
     private fun ermittleParteien() {
+        val curRund = currentRunde?: throw RuntimeException("Parteien können nicht ohne aktive runde ermittelt werden.")
+        var canSkip = true
         for (s in spieler) {
-            if (s.partei != Partei.UNBEKANNT) return
+            if (s.partei == Partei.UNBEKANNT) canSkip = false
         }
-        when (currentRunde?.welcherSpielmodus()) {
+        if (canSkip) return
+
+        when (curRund.welcherSpielmodus()) {
             Spielmodus.NORMAL -> {
                 for (s in spieler) {
                     if (s.hasKarte(Karte.KR_D)) s.partei = Partei.RE else s.partei = Partei.KONTRA
                 }
             }
 
-            Spielmodus.HOCHZEIT -> TODO()
+            Spielmodus.HOCHZEIT -> {
+                if (curRund.stichnummer() >= 4) {
+                    // Nach 3 Runden spielt die Hochzeit allein
+                    for (s in spieler) {
+                        if (s.partei == Partei.UNBEKANNT) s.partei = Partei.KONTRA
+                    }
+                } else {
+                    val re = spieler.first { it.partei == Partei.RE }
+                    val letzterGewinner = curRund.letzterStich?.gewinner
+                    if (letzterGewinner != null && letzterGewinner != re.pos) {
+                        for (s in spieler) {
+                            if (s.pos == letzterGewinner) s.partei = Partei.RE
+                            if (s.partei == Partei.UNBEKANNT) s.partei = Partei.KONTRA
+                        }
+                    }
+                }
+            }
             Spielmodus.ARMUT -> TODO()
             Spielmodus.SOLO_REINES_KARO, Spielmodus.SOLO_REINES_HERZ,
             Spielmodus.SOLO_REINES_PIK, Spielmodus.SOLO_REINES_KREUZ,
@@ -124,10 +150,8 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
             Spielmodus.SOLO_DAME, Spielmodus.SOLO_BUBE,
             Spielmodus.SOLO, Spielmodus.FLEISCHLOSER -> {
                 // Das sollte nie erreicht werden.
-                RuntimeException("Bei Solos muss die Partei bei Ansage bereits ermittelt worden sein.")
+                throw RuntimeException("Bei Solos muss die Partei bei Ansage bereits ermittelt worden sein.")
             }
-
-            null -> RuntimeException("Parteien können nicht auf Spielmodus null ermittelt werden.")
         }
     }
 
@@ -164,6 +188,6 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
                 gegenDieAlten
             )
         )
-        currentRunde = null
+        neuGeben()
     }
 }

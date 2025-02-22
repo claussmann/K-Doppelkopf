@@ -28,6 +28,14 @@ class Spieler(val name: String, val pos: Position) {
         return true
     }
 
+    fun korrektVorbehalt(modus: Spielmodus): Boolean {
+        return when(modus) {
+            Spielmodus.HOCHZEIT -> hand.count { it == Karte.KR_D } == 2
+            Spielmodus.ARMUT -> false
+            else -> true
+        }
+    }
+
     fun legeKarte(k: Karte) {
         if (hand.contains(k)) hand.remove(k) else throw IllegalerZugException("Karte $k nicht in Hand.")
     }
