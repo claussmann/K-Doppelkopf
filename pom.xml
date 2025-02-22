@@ -63,6 +63,12 @@
             <version>${ktor_version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-websockets-jvm</artifactId>
+            <version>${ktor_version}</version>
+        </dependency>
+
         <!--        TODO: Logging setup und update der dependencies-->
         <!--        The default logging framework-->
         <dependency>

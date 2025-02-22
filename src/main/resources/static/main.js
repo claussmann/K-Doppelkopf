@@ -4,8 +4,8 @@ let CURRENT_STICH = null;
 let PREV_STICH = null;
 let CURRENT_TURN = "LINKS"
 const DEBUG = true;
-const PERIODIC_CALL_INTERVAL = 5000
-let PERIODIC_CALL;
+let PERIODIC_CALL; // This will periodically check if the socket is still alive and reconnect if needed.
+let SOCKET; // This will receive updates from the server.
 
 
 
@@ -66,10 +66,30 @@ async function join(player_name) {
     document.getElementById("vorbehaltfield").style.display = "block";
     document.getElementById("display_player_name").textContent = SELF.name;
     await refresh()
-    PERIODIC_CALL = setInterval(refresh, PERIODIC_CALL_INTERVAL);
+    await connectSocket()
+    PERIODIC_CALL = setInterval(() => {
+        if(SOCKET == null) {
+            console.log("WebSocket not started or was terminated")
+            connectSocket()
+        }
+    }, 10_000);
+
+}
+
+async function connectSocket() {
+    console.log("Connecting WebSocket...")
+    SOCKET = new WebSocket("/subscribe");
+    SOCKET.addEventListener("message", (evt) => {
+        if (DEBUG) console.log("websocket: " + evt.data);
+        if (evt.data === "update") {
+            refresh()
+        }
+    })
+    console.log("WebSocket connected successfully")
 }
 
 async function layCard(pos) {
+    if (DEBUG) console.log("CARD_POS " + pos);
     if (SELF.hand.length >= pos) {
         resp = await api_post_body("/putcard", {"token": SELF.sessionToken, "card": SELF.hand[pos]});
         await refresh()
@@ -77,7 +97,7 @@ async function layCard(pos) {
 }
 
 async function vorbehalt(vorbehalt) {
-    console.log(vorbehalt)
+    if (DEBUG) console.log(vorbehalt)
     resp = await api_post_body("/putvorbehalt", {"token": SELF.sessionToken, "vorbehalt": vorbehalt});
     await refresh()
 }
@@ -96,7 +116,7 @@ async function refresh() {
         }
         return cardValues[cardB] - cardValues[cardA]
     }
-    console.log("Refreshing...");
+    if (DEBUG) console.log("Refreshing...");
     let resp = await api_post_body("/update", {"token": SELF.sessionToken});
     PLAYERS = resp.spielerListe;
     CURRENT_STICH = resp.aktuellerStich;
@@ -148,8 +168,10 @@ function displayParty() {
 }
 
 function displayTableCards() {
-    console.log(CURRENT_STICH)
-    console.log(PREV_STICH)
+    if (DEBUG) {
+        console.log("CURRENT_STICH " + CURRENT_STICH)
+        console.log("PREV_STICH " + PREV_STICH)
+    }
     let L = null;
     let R = null;
     let B = null;
