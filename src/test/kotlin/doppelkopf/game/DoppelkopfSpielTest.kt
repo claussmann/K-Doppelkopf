@@ -265,4 +265,29 @@ class DoppelkopfSpielTest {
         assertEquals(Partei.KONTRA, fred.partei)
         assertEquals(Partei.KONTRA, ann.partei)
     }
+
+    @Test
+    fun testAnsageHochzeitUnmoeglich() {
+        val peter = Spieler("Peter", Position.OBEN)
+        val jan = Spieler("Jan", Position.RECHTS)
+        val fred = Spieler("Fred", Position.UNTEN)
+        val ann = Spieler("Ann", Position.LINKS)
+        val g = DoppelkopfSpiel(arrayOf(peter, jan, fred, ann))
+
+        peter.neueHand(arrayListOf(
+            Karte.HE_10, Karte.KR_D, Karte.PI_D, Karte.HE_D, Karte.PI_B, Karte.KA_10,
+            Karte.KA_9, Karte.KR_10, Karte.KR_9, Karte.HE_K, Karte.PI_A, Karte.PI_K), force = true)
+        jan.neueHand(arrayListOf(
+            Karte.KR_D, Karte.KR_B, Karte.PI_B, Karte.KA_A, Karte.KA_9, Karte.PI_A,
+            Karte.PI_K, Karte.KR_A, Karte.KR_10, Karte.HE_A, Karte.HE_9, Karte.HE_9), force = true)
+        fred.neueHand(arrayListOf(
+            Karte.HE_D, Karte.KA_D, Karte.KA_D, Karte.KR_B, Karte.HE_B, Karte.KR_K,
+            Karte.KR_K, Karte.KR_9, Karte.PI_10, Karte.PI_9, Karte.HE_A, Karte.HE_K), force = true)
+        ann.neueHand(arrayListOf(
+            Karte.HE_10, Karte.PI_D, Karte.HE_B, Karte.KA_B, Karte.KA_B, Karte.KA_A,
+            Karte.KA_10, Karte.KA_K, Karte.KA_K, Karte.KR_A, Karte.PI_10, Karte.PI_9), force = true)
+
+        // Spieler hat nur eine Kreuz Dame
+        assertFails { g.vorbehaltAnsagen(Spielmodus.HOCHZEIT, Position.OBEN) }
+    }
 }

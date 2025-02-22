@@ -45,6 +45,7 @@ class DoppelkopfSpiel(val spieler: Array<Spieler>) {
     fun vorbehaltAnsagen(vorbehalt: Spielmodus, pos: Position) {
         if (currentRunde != null) throw IllegalerZugException("Vorbehalte können gerade nicht angesagt werden.")
         if (ansager != pos || spielerAnPos(pos).vorbehalt != null) throw IllegalerZugException("Spieler ist nicht dran mit ansagen.")
+        if (!spielerAnPos(pos).korrektVorbehalt(vorbehalt)) throw IllegalerZugException("Spieler kann diesen Vorbehalt nicht ansagen.")
         spielerAnPos(pos).vorbehalt = vorbehalt
         ansager = ansager.next()
         if (vorbehaltVon(Position.LINKS) != null && vorbehaltVon(Position.RECHTS) != null
