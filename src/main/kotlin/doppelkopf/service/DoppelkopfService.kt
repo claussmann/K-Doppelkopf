@@ -3,14 +3,17 @@ package doppelkopf.service
 import doppelkopf.game.*
 import doppelkopf.model.SpielerPrivate
 import doppelkopf.model.SpielerPublic
-import doppelkopf.model.UpdateRequest
 import doppelkopf.model.UpdateResponse
-import java.lang.RuntimeException
-import java.util.UUID
+import io.ktor.server.websocket.*
+import io.ktor.websocket.*
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class DoppelkopfService {
     private val lobby = HashMap<String, Spieler>()
     private var game: DoppelkopfSpiel? = null
+    private var clients = Collections.synchronizedList<WebSocketServerSession>(ArrayList())
 
     fun join(spielername: String): SpielerPrivate {
         var sessionToken = UUID.randomUUID().toString()
@@ -62,6 +65,16 @@ class DoppelkopfService {
     fun karteLegen(sessionToken: String, karte: Karte) {
         val s = getPrivateSpielerInfo(sessionToken)
         getSpiel().karteLegen(karte, s.position)
+    }
+
+    fun addClient(client: WebSocketServerSession) {
+        clients.add(client)
+    }
+
+    suspend fun notifyClients() {
+        for (client in clients) {
+            client.send("update")
+        }
     }
 
     private fun getSpiel(): DoppelkopfSpiel {

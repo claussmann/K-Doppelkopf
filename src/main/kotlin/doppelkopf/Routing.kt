@@ -15,8 +15,19 @@ import io.ktor.server.http.content.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.websocket.*
+import io.ktor.websocket.*
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
 fun Application.configureRouting() {
+
+    install(WebSockets) {
+        pingPeriod = 15.seconds
+        timeout = 35.seconds
+        maxFrameSize = 30
+    }
+
     routing {
         staticResources("/", "static") // Serve index.html
 
@@ -32,6 +43,7 @@ fun Application.configureRouting() {
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
             }
+            service.notifyClients()
         }
 
         post("/putcard") {
@@ -45,6 +57,7 @@ fun Application.configureRouting() {
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
             }
+            service.notifyClients()
         }
 
         post("/putvorbehalt") {
@@ -59,6 +72,7 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.InternalServerError)
                 println(e.message)
             }
+            service.notifyClients()
         }
 
         post("/update") {
@@ -69,6 +83,14 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.Unauthorized)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
+            }
+        }
+
+        webSocket("/subscribe") {
+            service.addClient(this)
+            while (true) {
+                send("keepalive")
+                delay(10_000)
             }
         }
     }
