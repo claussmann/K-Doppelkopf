@@ -25,8 +25,9 @@ class DoppelkopfService {
     private val mutex = Mutex()
 
     suspend fun join(spielername: String): SpielerPrivate {
+        val ret: SpielerPrivate
         mutex.withLock {
-            val ret = syncJoin(spielername)
+            ret = syncJoin(spielername)
         }
         abonnentenBenachrichtigen()
         return ret
