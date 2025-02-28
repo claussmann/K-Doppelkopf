@@ -13,7 +13,6 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
-import io.ktor.websocket.*
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 
@@ -40,7 +39,6 @@ fun Application.configureRouting() {
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
             }
-            notifyClients()
         }
 
         post("/putcard") {
@@ -54,7 +52,6 @@ fun Application.configureRouting() {
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
             }
-            notifyClients()
         }
 
         post("/putvorbehalt") {
@@ -69,7 +66,6 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.InternalServerError)
                 println(e.message)
             }
-            notifyClients()
         }
 
         post("/update") {
@@ -84,10 +80,12 @@ fun Application.configureRouting() {
         }
 
         webSocket("/subscribe") {
-            addClient(this)
+            service.websocketAbonnieren(this)
             while (true) {
-                send("keepalive")
-                delay(10_000)
+                // Just in case we miss an update somewhere (e.g. in race-conditions because reading state is
+                // not thread-safe). Btw. we need to call send() anyway to keep connection alive.
+                service.abonnentenBenachrichtigen()
+                delay(5.seconds)
             }
         }
     }

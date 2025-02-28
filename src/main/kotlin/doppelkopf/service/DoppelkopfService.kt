@@ -4,21 +4,40 @@ import doppelkopf.game.*
 import doppelkopf.model.SpielerPrivate
 import doppelkopf.model.SpielerPublic
 import doppelkopf.model.UpdateResponse
-import java.util.UUID
+import io.ktor.server.websocket.*
+import io.ktor.websocket.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class DoppelkopfService {
     private val lobby = HashMap<String, Spieler>()
     private var game: DoppelkopfSpiel? = null
 
-    fun join(spielername: String): SpielerPrivate {
+    // To send notifications to the players
+    private var clients = Collections.synchronizedList<WebSocketServerSession>(ArrayList())
+
+    // We will lock every action which CHANGES the state but not reading operations. We can accept rare cases where a
+    // client reads a faulty state because the client will update periodically anyway. However, the update functions
+    // in DoppelkopfSpiel are not thread-safe, so we must protect them.
+    private val mutex = Mutex()
+
+    suspend fun join(spielername: String): SpielerPrivate {
         var sessionToken = UUID.randomUUID().toString()
-        while (sessionToken in lobby) {
-            sessionToken = UUID.randomUUID().toString()
+        val ret:SpielerPrivate
+        mutex.withLock {
+            while (sessionToken in lobby) {
+                sessionToken = UUID.randomUUID().toString()
+            }
+            val spieler = Spieler(spielername, randomPosition())
+            lobby[sessionToken] = spieler
+            if (isFull()) game = DoppelkopfSpiel(lobby.values.toTypedArray())
+            ret = SpielerPrivate(spieler, sessionToken)
         }
-        val spieler = Spieler(spielername, randomPosition())
-        lobby[sessionToken] = spieler
-        if (isFull()) game = DoppelkopfSpiel(lobby.values.toTypedArray())
-        return SpielerPrivate(spieler, sessionToken)
+        abonnentenBenachrichtigen()
+        return ret
     }
 
     fun getPublicSpielerInfo(pos: Position): SpielerPublic {
@@ -52,14 +71,30 @@ class DoppelkopfService {
         return getPublicSpielerInfo(pos)
     }
 
-    fun vorbehaltAnsagen(sessionToken: String, vorbehalt: Spielmodus) {
-        val s = getPrivateSpielerInfo(sessionToken)
-        getSpiel().vorbehaltAnsagen(vorbehalt, s.position)
+    suspend fun vorbehaltAnsagen(sessionToken: String, vorbehalt: Spielmodus) {
+        mutex.withLock {
+            val s = getPrivateSpielerInfo(sessionToken)
+            getSpiel().vorbehaltAnsagen(vorbehalt, s.position)
+        }
+        abonnentenBenachrichtigen()
     }
 
-    fun karteLegen(sessionToken: String, karte: Karte) {
-        val s = getPrivateSpielerInfo(sessionToken)
-        getSpiel().karteLegen(karte, s.position)
+    suspend fun karteLegen(sessionToken: String, karte: Karte) {
+        mutex.withLock {
+            val s = getPrivateSpielerInfo(sessionToken)
+            getSpiel().karteLegen(karte, s.position)
+        }
+        abonnentenBenachrichtigen()
+    }
+
+    fun websocketAbonnieren(client: WebSocketServerSession) {
+        clients.add(client)
+    }
+
+    suspend fun abonnentenBenachrichtigen() {
+        for (client in clients) {
+            client.send("update")
+        }
     }
 
     private fun getSpiel(): DoppelkopfSpiel {
