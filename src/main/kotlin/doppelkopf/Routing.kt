@@ -13,15 +13,13 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
-import io.ktor.websocket.*
-import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 
 fun Application.configureRouting() {
 
     install(WebSockets) {
-        pingPeriod = 180.seconds
-        timeout = 200.seconds
+        pingPeriod = 150.seconds
+        timeout = 150.seconds
         maxFrameSize = 30
     }
 
@@ -82,19 +80,10 @@ fun Application.configureRouting() {
 
         webSocket("/subscribe") {
             service.websocketAbonnieren(this)
-            var i = 0
-            while (true) {
-                i ++
-                if (i % 5 == 0) {
-                    // Just in case we miss an update somewhere (e.g. in race-conditions because reading state is
-                    // not thread-safe).
-                    service.abonnentenBenachrichtigen()
-                } else {
-                    // We need to call send() periodically to keep connection alive.
-                    send("keepalive")
-                }
-                delay(5.seconds)
+            for (frame in incoming) {
+                send(frame) // Echo
             }
+            service.websocketDeabonnieren(this)
         }
     }
 }

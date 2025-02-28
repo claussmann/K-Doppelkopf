@@ -91,7 +91,11 @@ class DoppelkopfService {
         clients.add(client)
     }
 
-    suspend fun abonnentenBenachrichtigen() {
+    fun websocketDeabonnieren(client: WebSocketServerSession) {
+        clients.remove(client)
+    }
+
+    private suspend fun abonnentenBenachrichtigen() {
         for (client in clients) {
             client.send("update")
         }
