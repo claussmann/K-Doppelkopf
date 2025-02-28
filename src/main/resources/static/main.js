@@ -72,7 +72,7 @@ async function join(player_name) {
             console.log("WebSocket not started or was terminated")
             connectSocket()
         }
-    }, 10_000);
+    }, 3_000);
 
 }
 
