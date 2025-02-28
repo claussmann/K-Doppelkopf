@@ -25,19 +25,20 @@ class DoppelkopfService {
     private val mutex = Mutex()
 
     suspend fun join(spielername: String): SpielerPrivate {
-        var sessionToken = UUID.randomUUID().toString()
-        val ret:SpielerPrivate
-        mutex.withLock {
-            while (sessionToken in lobby) {
-                sessionToken = UUID.randomUUID().toString()
-            }
-            val spieler = Spieler(spielername, randomPosition())
-            lobby[sessionToken] = spieler
-            if (isFull()) game = DoppelkopfSpiel(lobby.values.toTypedArray())
-            ret = SpielerPrivate(spieler, sessionToken)
-        }
+        val ret = syncJoin(spielername)
         abonnentenBenachrichtigen()
         return ret
+    }
+
+    internal fun syncJoin(spielername: String): SpielerPrivate {
+        var sessionToken = UUID.randomUUID().toString()
+        while (sessionToken in lobby) {
+            sessionToken = UUID.randomUUID().toString()
+        }
+        val spieler = Spieler(spielername, randomPosition())
+        lobby[sessionToken] = spieler
+        if (isFull()) game = DoppelkopfSpiel(lobby.values.toTypedArray())
+        return SpielerPrivate(spieler, sessionToken)
     }
 
     fun getPublicSpielerInfo(pos: Position): SpielerPublic {
@@ -73,18 +74,26 @@ class DoppelkopfService {
 
     suspend fun vorbehaltAnsagen(sessionToken: String, vorbehalt: Spielmodus) {
         mutex.withLock {
-            val s = getPrivateSpielerInfo(sessionToken)
-            getSpiel().vorbehaltAnsagen(vorbehalt, s.position)
+            syncVorbehaltAnsagen(sessionToken, vorbehalt)
         }
         abonnentenBenachrichtigen()
     }
 
+    internal fun syncVorbehaltAnsagen(sessionToken: String, vorbehalt: Spielmodus) {
+        val s = getPrivateSpielerInfo(sessionToken)
+        getSpiel().vorbehaltAnsagen(vorbehalt, s.position)
+    }
+
     suspend fun karteLegen(sessionToken: String, karte: Karte) {
         mutex.withLock {
-            val s = getPrivateSpielerInfo(sessionToken)
-            getSpiel().karteLegen(karte, s.position)
+            syncKarteLegen(sessionToken, karte)
         }
         abonnentenBenachrichtigen()
+    }
+
+    internal fun syncKarteLegen(sessionToken: String, karte: Karte) {
+        val s = getPrivateSpielerInfo(sessionToken)
+        getSpiel().karteLegen(karte, s.position)
     }
 
     fun websocketAbonnieren(client: WebSocketServerSession) {
