@@ -20,7 +20,7 @@ fun Application.configureRouting() {
     install(WebSockets) {
         pingPeriod = 150.seconds
         timeout = 150.seconds
-        maxFrameSize = 30
+        maxFrameSize = 200
     }
 
     routing {

@@ -3,7 +3,7 @@ let PLAYERS = [];
 let CURRENT_STICH = null;
 let PREV_STICH = null;
 let CURRENT_TURN = "LINKS"
-const DEBUG = true;
+const DEBUG = false;
 let PERIODIC_CHECK_SOCKET; // This will periodically check if the socket is still alive and reconnect if needed.
 let SOCKET; // This will receive updates from the server.
 let PERIODIC_UPDATE; // This will call update periodically as a fallback for the socket
