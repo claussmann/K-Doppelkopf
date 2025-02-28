@@ -4,8 +4,7 @@ import doppelkopf.game.*
 import doppelkopf.model.SpielerPrivate
 import doppelkopf.model.SpielerPublic
 import doppelkopf.model.UpdateResponse
-import java.util.*
-import kotlin.collections.HashMap
+import java.util.UUID
 
 class DoppelkopfService {
     private val lobby = HashMap<String, Spieler>()
