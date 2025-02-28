@@ -85,6 +85,10 @@ async function connectSocket() {
             refresh()
         }
     })
+    SOCKET.addEventListener("close", (evt) => {
+        if (DEBUG) console.log("websocket disconnected by peer.");
+        SOCKET = null;
+    })
     console.log("WebSocket connected successfully")
 }
 
