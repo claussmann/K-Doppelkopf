@@ -1,14 +1,11 @@
 package doppelkopf
 
 import doppelkopf.game.IllegalerZugException
-import doppelkopf.game.Karte
-import doppelkopf.game.Position
 import doppelkopf.model.CardPutRequest
 import doppelkopf.model.JoinRequest
 import doppelkopf.model.UpdateRequest
 import doppelkopf.model.VorbehaltRequest
 import doppelkopf.service.FehlerhaftesTokenException
-import doppelkopf.service.SpielerNichtGefundenException
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
@@ -43,7 +40,7 @@ fun Application.configureRouting() {
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
             }
-            service.notifyClients()
+            notifyClients()
         }
 
         post("/putcard") {
@@ -57,7 +54,7 @@ fun Application.configureRouting() {
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
             }
-            service.notifyClients()
+            notifyClients()
         }
 
         post("/putvorbehalt") {
@@ -72,7 +69,7 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.InternalServerError)
                 println(e.message)
             }
-            service.notifyClients()
+            notifyClients()
         }
 
         post("/update") {
@@ -87,7 +84,7 @@ fun Application.configureRouting() {
         }
 
         webSocket("/subscribe") {
-            service.addClient(this)
+            addClient(this)
             while (true) {
                 send("keepalive")
                 delay(10_000)
