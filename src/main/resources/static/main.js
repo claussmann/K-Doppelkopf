@@ -3,9 +3,10 @@ let PLAYERS = [];
 let CURRENT_STICH = null;
 let PREV_STICH = null;
 let CURRENT_TURN = "LINKS"
-const DEBUG = true;
-let PERIODIC_CALL; // This will periodically check if the socket is still alive and reconnect if needed.
+const DEBUG = false;
+let PERIODIC_CHECK_SOCKET; // This will periodically check if the socket is still alive and reconnect if needed.
 let SOCKET; // This will receive updates from the server.
+let PERIODIC_UPDATE; // This will call update periodically as a fallback for the socket
 
 
 
@@ -67,12 +68,14 @@ async function join(player_name) {
     document.getElementById("display_player_name").textContent = SELF.name;
     await refresh()
     await connectSocket()
-    PERIODIC_CALL = setInterval(() => {
+    PERIODIC_CHECK_SOCKET = setInterval(() => {
         if(SOCKET == null) {
-            console.log("WebSocket not started or was terminated")
             connectSocket()
+        } else {
+            SOCKET.send("ping")
         }
-    }, 10_000);
+    }, 3_000);
+    PERIODIC_UPDATE = setInterval(refresh, 30_000);
 
 }
 
@@ -84,6 +87,10 @@ async function connectSocket() {
         if (evt.data === "update") {
             refresh()
         }
+    })
+    SOCKET.addEventListener("close", (evt) => {
+        if (DEBUG) console.log("websocket disconnected by peer.");
+        SOCKET = null;
     })
     console.log("WebSocket connected successfully")
 }

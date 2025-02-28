@@ -11,7 +11,7 @@ class DoppelkopfServiceTest {
     @Test
     fun testCreatePlayer() {
         val service = DoppelkopfService()
-        val secretSpieler = service.join("Peter")
+        val secretSpieler = service.syncJoin("Peter")
         val publicSpieler = service.getPublicSpielerInfo(secretSpieler.position)
 
         assertEquals("Peter", publicSpieler.name)
@@ -24,65 +24,65 @@ class DoppelkopfServiceTest {
     @Test
     fun testCreateAllPlayersAndStartGame() {
         val service = DoppelkopfService()
-        val s1 = service.join("Peter")
-        val s2 = service.join("Reiner")
-        val s3 = service.join("Heidi")
-        val s4 = service.join("Gustav")
+        val s1 = service.syncJoin("Peter")
+        val s2 = service.syncJoin("Reiner")
+        val s3 = service.syncJoin("Heidi")
+        val s4 = service.syncJoin("Gustav")
 
-        assertFails { service.join("Herrman") }
+        assertFails { service.syncJoin("Herrman") }
         assertEquals(12, service.getPrivateSpielerInfo(s1.sessionToken).hand.size)
     }
 
     @Test
-    fun testVorbehaltAnsagen() {
+    fun testsyncVorbehaltAnsagen() {
         val service = DoppelkopfService()
-        val s1 = service.join("Peter")
-        val s2 = service.join("Reiner")
-        val s3 = service.join("Heidi")
-        val s4 = service.join("Gustav")
+        val s1 = service.syncJoin("Peter")
+        val s2 = service.syncJoin("Reiner")
+        val s3 = service.syncJoin("Heidi")
+        val s4 = service.syncJoin("Gustav")
 
         var currentTurnPlayer = service.getCurrentTurnPlayer()
         var privateCurrentTurn = listOf(s1, s2, s3, s4).first { it.position == currentTurnPlayer.position }
-        service.vorbehaltAnsagen(privateCurrentTurn.sessionToken, Spielmodus.NORMAL)
+        service.syncVorbehaltAnsagen(privateCurrentTurn.sessionToken, Spielmodus.NORMAL)
 
         currentTurnPlayer = service.getCurrentTurnPlayer()
         privateCurrentTurn = listOf(s1, s2, s3, s4).first { it.position == currentTurnPlayer.position }
-        service.vorbehaltAnsagen(privateCurrentTurn.sessionToken, Spielmodus.NORMAL)
+        service.syncVorbehaltAnsagen(privateCurrentTurn.sessionToken, Spielmodus.NORMAL)
 
         currentTurnPlayer = service.getCurrentTurnPlayer()
         privateCurrentTurn = listOf(s1, s2, s3, s4).first { it.position == currentTurnPlayer.position }
-        service.vorbehaltAnsagen(privateCurrentTurn.sessionToken, Spielmodus.NORMAL)
+        service.syncVorbehaltAnsagen(privateCurrentTurn.sessionToken, Spielmodus.NORMAL)
 
         currentTurnPlayer = service.getCurrentTurnPlayer()
         privateCurrentTurn = listOf(s1, s2, s3, s4).first { it.position == currentTurnPlayer.position }
-        service.vorbehaltAnsagen(privateCurrentTurn.sessionToken, Spielmodus.NORMAL)
+        service.syncVorbehaltAnsagen(privateCurrentTurn.sessionToken, Spielmodus.NORMAL)
     }
 
     @Test
-    fun testKarteLegen() {
+    fun testsyncKarteLegen() {
         val service = DoppelkopfService()
-        val s1 = service.join("Peter")
-        val s2 = service.join("Reiner")
-        val s3 = service.join("Heidi")
-        val s4 = service.join("Gustav")
+        val s1 = service.syncJoin("Peter")
+        val s2 = service.syncJoin("Reiner")
+        val s3 = service.syncJoin("Heidi")
+        val s4 = service.syncJoin("Gustav")
 
         var currentTurnPlayer = service.getCurrentTurnPlayer()
         var privateCurrentTurn = listOf(s1, s2, s3, s4).first { it.position == currentTurnPlayer.position }
-        service.vorbehaltAnsagen(privateCurrentTurn.sessionToken, Spielmodus.NORMAL)
+        service.syncVorbehaltAnsagen(privateCurrentTurn.sessionToken, Spielmodus.NORMAL)
         currentTurnPlayer = service.getCurrentTurnPlayer()
         privateCurrentTurn = listOf(s1, s2, s3, s4).first { it.position == currentTurnPlayer.position }
-        service.vorbehaltAnsagen(privateCurrentTurn.sessionToken, Spielmodus.NORMAL)
+        service.syncVorbehaltAnsagen(privateCurrentTurn.sessionToken, Spielmodus.NORMAL)
         currentTurnPlayer = service.getCurrentTurnPlayer()
         privateCurrentTurn = listOf(s1, s2, s3, s4).first { it.position == currentTurnPlayer.position }
-        service.vorbehaltAnsagen(privateCurrentTurn.sessionToken, Spielmodus.NORMAL)
+        service.syncVorbehaltAnsagen(privateCurrentTurn.sessionToken, Spielmodus.NORMAL)
         currentTurnPlayer = service.getCurrentTurnPlayer()
         privateCurrentTurn = listOf(s1, s2, s3, s4).first { it.position == currentTurnPlayer.position }
-        service.vorbehaltAnsagen(privateCurrentTurn.sessionToken, Spielmodus.NORMAL)
+        service.syncVorbehaltAnsagen(privateCurrentTurn.sessionToken, Spielmodus.NORMAL)
 
         currentTurnPlayer = service.getCurrentTurnPlayer()
         privateCurrentTurn = listOf(s1, s2, s3, s4).first { it.position == currentTurnPlayer.position }
         val playerWithCards = service.getPrivateSpielerInfo(privateCurrentTurn.sessionToken)
-        service.karteLegen(playerWithCards.sessionToken, playerWithCards.hand.first())
+        service.syncKarteLegen(playerWithCards.sessionToken, playerWithCards.hand.first())
         assertEquals(11, service.getPrivateSpielerInfo(privateCurrentTurn.sessionToken).hand.size)
     }
 }
