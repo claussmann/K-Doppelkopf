@@ -3,9 +3,7 @@ package doppelkopf.service
 import doppelkopf.game.*
 import doppelkopf.model.SpielerPrivate
 import doppelkopf.model.SpielerPublic
-import doppelkopf.model.UpdateRequest
 import doppelkopf.model.UpdateResponse
-import java.lang.RuntimeException
 import java.util.UUID
 
 class DoppelkopfService {

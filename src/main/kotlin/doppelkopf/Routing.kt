@@ -1,22 +1,30 @@
 package doppelkopf
 
 import doppelkopf.game.IllegalerZugException
-import doppelkopf.game.Karte
-import doppelkopf.game.Position
 import doppelkopf.model.CardPutRequest
 import doppelkopf.model.JoinRequest
 import doppelkopf.model.UpdateRequest
 import doppelkopf.model.VorbehaltRequest
 import doppelkopf.service.FehlerhaftesTokenException
-import doppelkopf.service.SpielerNichtGefundenException
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.websocket.*
+import io.ktor.websocket.*
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
 fun Application.configureRouting() {
+
+    install(WebSockets) {
+        pingPeriod = 15.seconds
+        timeout = 35.seconds
+        maxFrameSize = 30
+    }
+
     routing {
         staticResources("/", "static") // Serve index.html
 
@@ -32,6 +40,7 @@ fun Application.configureRouting() {
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
             }
+            notifyClients()
         }
 
         post("/putcard") {
@@ -45,6 +54,7 @@ fun Application.configureRouting() {
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
             }
+            notifyClients()
         }
 
         post("/putvorbehalt") {
@@ -59,6 +69,7 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.InternalServerError)
                 println(e.message)
             }
+            notifyClients()
         }
 
         post("/update") {
@@ -69,6 +80,14 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.Unauthorized)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError)
+            }
+        }
+
+        webSocket("/subscribe") {
+            addClient(this)
+            while (true) {
+                send("keepalive")
+                delay(10_000)
             }
         }
     }
